@@ -42,8 +42,34 @@ void seive(){
 int32_t main(){
 	seive();
 
-	int q;
-	cin>>q;
-	cout<<lp[q]<<' '<<hp[q]<<endl;
+		// int q;
+	// cin>>q;
+	// cout<<lp[q]<<' '<<hp[q]<<endl;
+
+
+
+	//To get prime factors of a number with O(log(n)) time complexity
+	int num;
+	cin>>num;
+	vector<int> prime_factors;
+
+	//Procedure is simple 
+	//1. First find the lp[num] then devide num by lp[num] and continue until num reach to 1 
+	//Store all the lp[num] in a vector or map that is our desired prime factors
+
+	while(num > 1){
+		int prime_factor = lp[num];
+
+		while(num % prime_factor == 0){
+			num /= prime_factor;
+			prime_factors.push_back(prime_factor);
+		}
+	}
+
+	for(auto a : prime_factors){
+		cout<<a<<' ';
+	}
+	cout<<endl;
+	
 
 }
