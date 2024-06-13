@@ -51,7 +51,8 @@ int32_t main(){
 	//To get prime factors of a number with O(log(n)) time complexity
 	int num;
 	cin>>num;
-	vector<int> prime_factors;
+	// vector<int> prime_factors;
+	map<int, int> prime_factors;
 
 	//Procedure is simple 
 	//1. First find the lp[num] then devide num by lp[num] and continue until num reach to 1 
@@ -62,14 +63,13 @@ int32_t main(){
 
 		while(num % prime_factor == 0){
 			num /= prime_factor;
-			prime_factors.push_back(prime_factor);
+			prime_factors[prime_factor]++;
 		}
 	}
 
 	for(auto a : prime_factors){
-		cout<<a<<' ';
+		cout<<a.first<<' '<<a.second<<endl;
 	}
-	cout<<endl;
-	
+
 
 }
