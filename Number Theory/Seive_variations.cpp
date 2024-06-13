@@ -12,7 +12,8 @@ void seive(){
 
 	for(int i = 2; i * i <= N; i++){
 		if(P[i]){
-            hp[i] = i;
+			//Lowest prime and heighest prime number of a prime number is itself
+            lp[i] = hp[i] = i;
 
 			for(int j = i * 2; j <= N; j += i){
                 //For prime Number
