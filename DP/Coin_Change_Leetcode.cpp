@@ -31,32 +31,21 @@ typedef                    long double ld;
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const int N = 1e9 + 7;
 
-int dp[10005];
-
-int recur(int x, vector<int> &v){
-
-    if(x == 0)return 0;
-
-    int ans = N;
-
-    for(auto a : v){
-        if(a <= x){
-            if(dp[x - a] == -1)
-                dp[x - a] = recur(x - a, v);
-            ans = min(ans, dp[x - a]);
-        }
-    }
-    if(ans >= 0)return ans + 1;
-    return ans;
-}
-
 
 int coinChange(vector<int>& coins, int amount) {
-    memset(dp, -1, sizeof(dp));
+    fast_in_out;
+    
+    vector<int> dp(amount + 1, amount + 1);
+    dp[0] = 0;
 
-    int ans = recur(amount, coins);
-    if(ans == N)return -1;
-    else return ans;     
+    for(auto a : coins){
+        for(int j = a; j <= amount; j++){
+            dp[j] = min(dp[j], dp[j - a] + 1);
+        }
+    }
+
+    if(dp[amount] > amount)return -1;
+    return dp[amount];
 }
 
 int32_t main()
