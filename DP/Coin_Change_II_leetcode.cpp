@@ -26,9 +26,15 @@ int recur(vector<int> &v, int x, int n){
 
 
 int change(int amount, vector<int>& coins) {
-    memset(dp, -1, sizeof(dp));
-
-    return recur(coins, amount, coins.size() - 1);     
+    int dp[amount +  1] = {0};
+    dp[0] = 1;
+    for(int i = 0; i < coins.size(); i++){
+        for(int j = 0; j <= amount; j++){
+            if(coins[i] > j)continue;
+            dp[j] += dp[j - coins[i]];
+        }
+    }     
+    return dp[amount];
 }
 
 int32_t main(){
