@@ -1,72 +1,42 @@
 #include<bits/stdc++.h>
 using namespace std;
-
-typedef                    long long ll;
-typedef                    long double ld;
-#define int                long long
-
-#define yes                cout<<"YES\n"
-#define no                 cout<<"NO\n"
-#define nl                 cout<<"\n"
-#define endl               "\n"
-
-#define lin(n)             ll n;cin>>n;
-#define in(n)              int n;cin>>n;
-#define vin                vector<int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define srt(v)             sort(v.begin(),v.end());
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-#define mmp                make_pair
-
-#define sz(x)              ((int)(x).size())
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+#define print(arr)         for(auto x: arr)cout<<x<<' '; cout<<endl;
+#define int        long long
 const int M = 1e9 + 7;
-int n, w, mx = 0;
+const int N = 1e5 + 10;
 vector<pair<int, int>> v;
-int dp[102];
+int dp[105][N];
 
-void recur(int i, int weight, int sum){
-    cout<<i<<endl;
+int func(int i, int w){
 
-    if(weight <= w){
-        mx = max(mx, sum);
+    if(w == 0)return 0;
+    if(i == -1)return 0;
+
+    //Not take
+    if(dp[i][w] != 0)return dp[i][w];
+    int x = func(i - 1, w);
+
+    //Take
+
+    int y = 0;
+    if(w - v[i].first >= 0){
+        y = func(i - 1, w - v[i].first) + v[i].second;
     }
-    else return;
-    if(i == -1){
-        mx = max(mx, sum);
-        return;
-    }
 
-    recur(i - 1, weight, sum);
-    // if(dp[i] == 0)
-        recur(i - 1, weight + v[i].first, sum + v[i].second);
-
-
+    return dp[i][w] = max(x, y);
 }
 
 
-
-int32_t main()
-{
-    fast_in_out;
+int32_t main(){
+    int n, w;
     cin>>n>>w;
 
-    forn(i,n){
-        lin(x) lin(y)
+    for(int i = 0; i < n; i++){
+        int x, y;
+        cin>>x>>y;
         v.push_back({x, y});
     }
 
-    recur(n - 1, 0, 0);
-    cout<<mx<<endl;
-    
+    cout<<func(n - 1, w)<<endl;
     
 }
