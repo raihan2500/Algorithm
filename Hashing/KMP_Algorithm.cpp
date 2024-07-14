@@ -13,8 +13,8 @@ vector<int> createTempArray(string pattern){
             lps[i] = index + 1;
             index++; i++;
         }else{
-            if(index != 0)index = lps[index - i];
-            else lps[i] = index, i++;
+            if(index != 0)index = lps[index - 1];
+            else lps[i] = 0, i++;
         }
     }
     return lps;
