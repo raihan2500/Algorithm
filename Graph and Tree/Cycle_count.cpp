@@ -6,23 +6,24 @@ const int M = 1e9 + 7;
 const int N = 1e5;
 
 vector<int> graph[N];
-vector<bool> vis(6);
+vector<bool> vis(N);
 
-void dfs(int vertex){
-    if(vis[vertex])return;
+void dfs(int vertex, int parent){
+
+    if(vis[vertex] && vertex != parent){
+        
+    }
+
     vis[vertex] = true;
-    // cout<<vertex<<endl;
 
     for(auto child : graph[vertex]){
-        // cout<<"par: "<< vertex << ", child: " << child<<endl;        
-        dfs(child);
+        dfs(child, parent);
     }
 }
-//Time complexity O(Vertex + Edge)
 
 int32_t main(){
-    int n, m;
-    cin >> n >> m;
+    int n, e;
+    cin >> n >> e;
 
     for(int i = 0; i < n; i++){
         int v1, v2;
@@ -31,6 +32,5 @@ int32_t main(){
         graph[v2].push_back(v1);
     }
 
-    dfs(1);
-    print(vis)   
+    
 }

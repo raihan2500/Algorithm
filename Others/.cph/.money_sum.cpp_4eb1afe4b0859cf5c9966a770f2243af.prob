@@ -1,0 +1,1 @@
+{"name":"Local: money_sum","url":"/home/raihan/Desktop/Algorithm Practice/Others/money_sum.cpp","tests":[{"id":1721475906403,"input":"5\n4 3 2 5 6","output":"18\n2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 20 "}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm Practice/Others/money_sum.cpp","group":"local","local":true}

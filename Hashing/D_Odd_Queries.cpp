@@ -29,23 +29,43 @@ typedef                    long double ld;
 #define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const int M = 1e9 + 7;
-int n, x;
-vector<int> v;
+
+void sukuna()
+{
+    int n, q;
+    cin>>n>>q;
+    vin v(n + 1);
+    for(int i = 1; i <= n; i++){
+        cin>>v[i];
+        v[i] += v[i - 1];
+    }
+
+    int sum = v[n]; 
+    while(q--){
+        int l, r, k;
+        cin>>l>>r>>k; l--;
+        int mid = v[r] - v[l];
+        int chk = (r - l) * k;
+
+        if(sum & 1){
+            if(mid % 2 == chk % 2)yes;
+            else no;
+        }
+        else {
+            if(mid % 2 == chk % 2)no;
+            else yes;        
+        }
+    }
+
+
+    
+}
 
 int32_t main()
 {
     fast_in_out;
-    cin >> n >> x;
-    forn(i,n){
-        lin(y);
-        v.pb(y);
-    }
-    sort(all(v));
-    
 
-    
-
-
-    
+    int test;	cin>>test;
+    while(test--)sukuna();
+    return 0;
 }

@@ -30,22 +30,31 @@ typedef                    long double ld;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const int M = 1e9 + 7;
-int n, x;
-vector<int> v;
 
-int32_t main()
-{
-    fast_in_out;
-    cin >> n >> x;
-    forn(i,n){
-        lin(y);
-        v.pb(y);
-    }
+void sukuna(){
+    lin(n);
+    vin v(n);
+    forn(i,n)cin >> v[i];
     sort(all(v));
-    
 
+    int ans = 0;
+    for(int i = 0, j; i < n;){
+        for(j = i; j < n; j++){
+            if(j - i + 1 == v[j]){
+                ans++;
+                break;
+            }
+        } 
+        i = j + 1;
+    }
+    cout<<ans<<endl; 
     
+}
 
+int32_t main(){
+    fast_in_out;
 
-    
+    int test;	cin>>test;
+    while(test--)sukuna();
+    return 0;
 }

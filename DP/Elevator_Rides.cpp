@@ -29,23 +29,33 @@ typedef                    long double ld;
 #define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const int M = 1e9 + 7;
+const int M = 1e10;
 int n, x;
-vector<int> v;
+vin v;
 
 int32_t main()
 {
     fast_in_out;
+
     cin >> n >> x;
+    v.pb(M);
     forn(i,n){
-        lin(y);
-        v.pb(y);
+        lin(l);
+        v.pb(l);
     }
-    sort(all(v));
-    
+    sort(v.begin() + 1, v.end());
+    int ans = 0;
+    for(int i = n; i > 0; i--){
+        if(v[i] == M)continue;
+        int sum = v[i];
+        for(int j = i - 1; j > 0; j --){
+            if(v[j] == M)continue;
+            if(sum + v[j] > x)continue;
+            sum += v[j];
+            v[j] = M;
+        }
+        ans++;
+    }
 
-    
-
-
-    
+    cout<<ans<<endl;
 }

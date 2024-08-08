@@ -30,22 +30,30 @@ typedef                    long double ld;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const int M = 1e9 + 7;
-int n, x;
-vector<int> v;
+
+int func(int aa, int bb){
+    __int128_t a = aa, b = bb;
+    a--; b--;
+    if(b < a)swap(a, b);
+    return ((b * (b + 1) / 2) - (a * (a + 1) / 2)) % M;
+}
 
 int32_t main()
 {
     fast_in_out;
-    cin >> n >> x;
-    forn(i,n){
-        lin(y);
-        v.pb(y);
+    lin(n);
+    int i = 1, q;
+    int ans = 0 ;
+
+    for(;i <= n;){
+        int f = i;
+        q = n / i;
+        i = n / q + 1;
+
+        ans += (q * func(f, i)) % M;
+        ans %= M;
     }
-    sort(all(v));
-    
 
-    
-
-
+    cout<<ans<<endl;
     
 }

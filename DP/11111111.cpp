@@ -30,22 +30,30 @@ typedef                    long double ld;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const int M = 1e9 + 7;
-int n, x;
-vector<int> v;
+const int N = 1e6 + 7;
+int dp[N];
+
 
 int32_t main()
 {
     fast_in_out;
-    cin >> n >> x;
-    forn(i,n){
-        lin(y);
-        v.pb(y);
+    lin(n); lin(sum)
+    vin v(n);
+    forn(i,n)cin>>v[i];
+    // int sum = accumulate(all(v), 0LL);
+    dp[0] = 1;
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j <= sum; j++){
+            dp[j + v[i]] += dp[j];
+        }
     }
-    sort(all(v));
+
+    for(int i = 0; i <= sum; i++){
+        cout<<dp[i]<<endl;
+    }
+
+    cout<<dp[sum]<<endl;
     
-
-    
-
-
     
 }
