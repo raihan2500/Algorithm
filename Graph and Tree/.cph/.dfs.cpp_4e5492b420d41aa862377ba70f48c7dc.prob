@@ -1,1 +1,0 @@
-{"name":"Local: dfs","url":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/dfs.cpp","tests":[{"id":1721443616225,"input":"6 9\n1 3\n1 5\n3 5\n3 4\n3 6\n3 2\n2 6\n4 6\n5 6","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/dfs.cpp","group":"local","local":true}
