@@ -13,6 +13,7 @@ typedef                    long double ld;
 #define lin(n)             ll n;cin>>n;
 #define in(n)              int n;cin>>n;
 #define vin                vector<int>
+#define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
 #define srt(v)             sort(v.begin(),v.end());
@@ -27,95 +28,93 @@ typedef                    long double ld;
 #define Forn(i,e)          for(int i=1;i<=e;i++)
 #define rforn(i,s)         for(int i=s-1;i>=0;i--)
 #define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
+#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+const long long INF = 1e18;
 const int M = 1e9 + 7;
+const int N = 1e3 + 100;
 int n, m;
-vector<string> graph, store;
-bool isFind = false;
-string ANS;
-int sgn = 0;
-
+vector<string> v;
+int vis[N][N];
 int cnt = 0;
+string big_string;
 
-void dfs(int i, int j, string ans){ 
+string recur(int i, int j){
     cnt++;
-    if(i < 0 || j < 0)return;
-    if(i >= n || j >= m)return;
-    if(graph[i][j] == '#')return;
+    // if(cnt > 10)return "*";
 
-    if(graph[i][j] == 'B'){
-        isFind = true;
-        ANS = ans;
-        return;
+    if(i >= n || i < 0)return "*";
+    if(j >= m || j < 0)return "*";
+    if(v[i][j] == 'B')return "";
+    if(v[i][j] == '#')return "*";
+
+    v[i][j] = '#';
+    vector<string> ans(4);
+
+
+    ans[0] ="D" + recur(i + 1, j);
+    ans[1] ="U" + recur(i - 1, j);
+
+    ans[2] ="R" + recur(i, j + 1);
+    ans[3] ="L" + recur(i, j - 1);
+
+
+
+    string a = big_string;
+    int ln = INF;
+    
+    for(auto it : ans){
+        // bool ck = 0;
+        // for(auto c : it)if(c == '*'){ck = 1; break;}
+        // if(ck)continue;
+        if(it.back() == '*')continue;
+        if(it.size() < ln){
+            ln = it.size();
+            a = it;
+        }
     }
-    graph[i][j] = '#';
-
-    if(sgn == 1){
-        sgn = 0;
-        dfs(i - 1, j, ans + 'U');
-        return;
-    }else if(sgn == 2){
-        sgn = 0;
-        dfs(i + 1, j, ans + 'D');
-        return;
-    }else if(sgn == 3){
-        sgn = 0;
-        dfs(i, j - 1, ans + 'L');
-        return;
-    }else if(sgn == 4){
-        sgn = 0;
-        dfs(i, j + 1, ans + 'R');
-        return;
-    }
-
-    dfs(i, j - 1, ans + 'L');
-    dfs(i, j + 1, ans + 'R');
-    dfs(i - 1, j, ans + 'U');
-    dfs(i + 1, j, ans + 'D');
+    return a;
 }
 
 
 int32_t main()
 {
     fast_in_out;
+    for(int i = 0; i < n * m; i++)big_string.push_back('Z');
+
+
     cin >> n >> m;
     forn(i,n){
         string str;
         cin >> str;
-        graph.push_back(str);
+        v.pb(str);
     }
-    store = graph;
-    int i, j;
-    for(i = 0; i < n; i++){
+    int i = 0, j = 0;
+    for(; i < n; i++){
         bool ck = 0;
         for(j = 0; j < m; j++){
-            if(graph[i][j] == 'A'){ck = 1; break;}
+            if(v[i][j] == 'A'){
+                ck = 1;
+                break;
+            }
         }
         if(ck)break;
     }
-
-
-    vector<string>ans;
-    bool CK = 0;
-    for(int x = 1; x <= 4; x++){
-        ANS.clear();
-        graph = store;
-        isFind = 0;
-        sgn = x;
-        dfs(i, j, "");
-        ans.push_back(ANS);
-        CK |= isFind;
+    if(v[i][j] != 'A'){
+        no;
+        return 0;
     }
 
-    for(auto a : ans)cout<<a<<endl;
-    sort(all(ans));
-    if(CK){
-        yes;
-        cout<<ans.front().size()<<endl<<ans.front()<<endl;
-    }
-    no;
+    string ans = recur(i, j);
 
-    cout<<cnt<<endl;
+    if(ans == big_string || ans == "*"){
+        no;
+        return 0;
+    }
+
+    yes;
+    cout<<ans.size()<<endl;
+    cout<<ans<<endl;
     
 }
