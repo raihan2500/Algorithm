@@ -1,56 +1,59 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-typedef                    long long ll;
-typedef                    long double ld;
-#define int                long long
-
-#define yes                cout<<"YES\n"
-#define no                 cout<<"NO\n"
-#define nl                 cout<<"\n"
-#define endl               "\n"
-
-#define lin(n)             ll n;cin>>n;
-#define in(n)              int n;cin>>n;
-#define vin                vector<int>
-#define pr                 pair<int, int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define srt(v)             sort(v.begin(),v.end());
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-#define mmp                make_pair
-
-#define sz(x)              ((int)(x).size())
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const long long INF = 1e18;
-const int M = 1e9 + 7;
 const int N = 2e5 + 100;
-
+vector<int> graph[N], par(N);
+bool vis[N], flg = false;
 int n, m;
-vin graph[N];
+
+void bfs(){
+    queue<int> q;
+    q.push(1);
+    vis[1] = true;
+
+    while(!q.empty()){
+        int v = q.front();
+        q.pop();
+        for(auto child : graph[v]){
+            if(vis[child])continue;
+            q.push(child);
+            vis[child] = true;
+            par[child] = v;
+            if(child == n){
+                flg = true;
+                return;
+            }
+        }
+    }    
+}
 
 
-int32_t main(){
-    fast_in_out;
+int main(){
     cin >> n >> m;
-    forn(i,m){
-        int v1, v2;
-        cin >> v1 >> v2;
-        graph[v1].push_back(v2);
-        graph[v2].push_back(v1);
+    for(int i = 0; i < m; i++){
+        int x, y;
+        cin >> x >> y;
+        graph[x].push_back(y);
+        graph[y].push_back(x);
     }
+    bfs();
 
-    
+    if(!flg){
+        cout<<"IMPOSSIBLE"<<endl;
+        return 0;
+    }
+    vector<int> ans;
 
+    int x = n;
+    ans.push_back(x);
+    while(1){
+        ans.push_back(par[x]);
+        x = par[x];
+        if(x == 1)break;
+    }
+    reverse(ans.begin(), ans.end());
+    cout<<ans.size()<<endl;
+    for(auto i : ans)cout<<i<<" ";
+    cout<<endl;
 
-   
 }
