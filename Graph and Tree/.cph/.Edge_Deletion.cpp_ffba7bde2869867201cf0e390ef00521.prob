@@ -1,1 +1,0 @@
-{"name":"Local: Edge_Deletion","url":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/Edge_Deletion.cpp","tests":[{"id":1724737888596,"input":"4\n1 2\n1 4\n4 3\n10 5 12 6","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/Edge_Deletion.cpp","group":"local","local":true}
