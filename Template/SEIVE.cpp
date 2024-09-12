@@ -3,10 +3,11 @@ using namespace std;
 #define print(v)                for(auto i : v)cout << i <<" ";cout << endl;
 
 class SEIVE{
-    public:
+    private:
         int N = 1e6;
-        vector<int> prime_numbers, lowest_prime, heighest_prime;
         vector<bool> isPrime;
+    public:
+        vector<int> prime_numbers, lowest_prime, heighest_prime;
         
         SEIVE(){
             N++; this->N = N;
@@ -23,7 +24,20 @@ class SEIVE{
             isPrime = vector<bool> (N);
             generate();
         }
-    
+
+        vector<int> primeFactors(int n){
+            vector<int> temp;
+            while(n > 1){
+                int pm = lowest_prime[n];
+                while(n % pm == 0){
+                    n /= pm;
+                    temp.push_back(pm);
+                }
+            }
+            return temp;
+        }
+        
+    private:
         void generate(){
             isPrime[0] = isPrime[1] = 1;
     
@@ -48,26 +62,12 @@ class SEIVE{
                 }
             }
         }
-        
-        vector<int> primeFactors(int n){
-            vector<int> temp;
-            while(n > 1){
-                int pm = lowest_prime[n];
-                while(n % pm == 0){
-                    n /= pm;
-                    temp.push_back(pm);
-                }
-            }
-            return temp;
-        }
 };
 
 
 
 int main(){
-    SEIVE pm;
+    SEIVE pm(10000000);
     print(pm.primeFactors(720));
-
-
-
+    print(pm.primeFactors(444632));
 }
