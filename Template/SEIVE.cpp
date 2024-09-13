@@ -36,6 +36,30 @@ class SEIVE{
             }
             return temp;
         }
+
+        vector<int> segSeive(int l, int r){
+            int n = r - l + 1;
+            vector<bool> isPrime(n + 1);
+            vector<int> primes;
+
+            for(int i = 0; prime_numbers[i] * prime_numbers[i] <= r; i++){
+                int st = ceil(l * 1.0 / prime_numbers[i]) * prime_numbers[i];
+                
+                for(int j = st; j <= r; j += prime_numbers[i]){
+                    if(j == prime_numbers[i])continue;
+                    isPrime[j - l] = true;
+                }
+            }
+
+            for(int i = 0; i < n; i++){
+                if(!isPrime[i]){
+                    if(i + l > 1){
+                        primes.push_back(i + l);
+                    }
+                }
+            }
+            return primes;
+        }
         
     private:
         void generate(){
@@ -67,7 +91,8 @@ class SEIVE{
 
 
 int main(){
-    SEIVE pm(10000000);
-    print(pm.primeFactors(720));
-    print(pm.primeFactors(444632));
+    SEIVE done;
+    int l, r;
+    cin >> l >> r;
+    print(done.segSeive(l, r));
 }
