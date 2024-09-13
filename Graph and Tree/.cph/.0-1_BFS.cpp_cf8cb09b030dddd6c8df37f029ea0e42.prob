@@ -1,1 +1,0 @@
-{"name":"Local: 0-1_BFS","url":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/0-1_BFS.cpp","tests":[{"id":1725437840048,"input":"7 7\n1 2\n3 2\n3 4\n7 4\n6 2\n5 6\n7 5","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm Practice/Graph and Tree/0-1_BFS.cpp","group":"local","local":true}
