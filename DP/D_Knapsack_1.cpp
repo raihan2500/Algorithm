@@ -1,42 +1,29 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define print(arr)         for(auto x: arr)cout<<x<<' '; cout<<endl;
-#define int        long long
-const int M = 1e9 + 7;
-const int N = 1e5 + 10;
-vector<pair<int, int>> v;
-int dp[105][N];
 
-int func(int i, int w){
+const int N = 2e5 + 10;
+int n, w;
+int wt[105], val[105];
 
-    if(w == 0)return 0;
-    if(i == -1)return 0;
 
-    //Not take
-    if(dp[i][w] != 0)return dp[i][w];
-    int x = func(i - 1, w);
+int recur(int ind, int wt_left){
+    if(ind == n)return 0;
+    if(wt_left <= 0)return 0;
 
-    //Take
+    int x = recur(ind + 1, wt_left);
 
     int y = 0;
-    if(w - v[i].first >= 0){
-        y = func(i - 1, w - v[i].first) + v[i].second;
-    }
+    if(wt_left > wt[ind])y = val[ind] + recur(ind + 1, wt_left- wt[ind]);
 
-    return dp[i][w] = max(x, y);
+    return max(x, y);
+    
 }
 
-
 int32_t main(){
-    int n, w;
-    cin>>n>>w;
+    cin >> n >> w;
 
     for(int i = 0; i < n; i++){
-        int x, y;
-        cin>>x>>y;
-        v.push_back({x, y});
-    }
-
-    cout<<func(n - 1, w)<<endl;
-    
+        cin >> wt[i] >> val[i];
+    }  
+    cout << recur(0, w) << endl;
 }
