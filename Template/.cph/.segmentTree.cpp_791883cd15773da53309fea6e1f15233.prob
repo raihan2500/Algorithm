@@ -1,0 +1,1 @@
+{"name":"Local: segmentTree","url":"/home/raihan/Desktop/Algorithm_practice/Template/segmentTree.cpp","tests":[{"id":1726504505428,"input":"5 4\n1 2 3 4 5\n2 1 3\n1 1 4\n2 1 3\n2 1 5","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm_practice/Template/segmentTree.cpp","group":"local","local":true}
