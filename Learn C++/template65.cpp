@@ -6,7 +6,7 @@ const int M = 1e9 + 7;
 const int N = 2e5 + 10;
 
 /*
- template with multiple parameter
+ class template with multiple parameter
  syntax:
  template<class T1, class T2>
  */

@@ -1,0 +1,1 @@
+{"name":"Local: KmpAlgorithm","url":"/home/raihan/Desktop/Algorithm_practice/String/KmpAlgorithm.cpp","tests":[{"id":1726852898596,"input":"abababab aba","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm_practice/String/KmpAlgorithm.cpp","group":"local","local":true}

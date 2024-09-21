@@ -29,6 +29,7 @@ int main(){
 
     cout << v.sum() << endl;
 
+    //We don't need to create a class with float data type
     Vec<float> fv(4);
     fv.arr[0] = 1.5;
     fv.arr[1] = 2.5;

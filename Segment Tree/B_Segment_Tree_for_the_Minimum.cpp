@@ -1,9 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int long long
-const int M = 1e9 + 7;
-const int N = 2e5 + 10;
 
 class segTree{
     #define int long long
@@ -75,22 +72,23 @@ class segTree{
         }
 };
 
-template<class T>
-bool CMP(T a, T b){
-    return a > b;
-}
-
 int32_t main(){
-
-    int n;
-    cin >> n;
+    int n, q;
+    cin >> n >> q;
     vector<int> v(n);
+    for(int i = 0; i < n; i++){
+        cin >> v[i];
+    }
+    segTree seg("min", v);
 
-    for(int i = 0; i < n; i++)cin >> v[i];
-    segTree minQ("min", v);
-    cout << minQ.Query(1,4);
+    while(q--){
+        int type, l, r;
+        cin >> type >> l >> r;
 
-    sort(v.begin(), v.end(), CMP<int>);
-    for(auto i : v)cout << i <<" ";
-  
+        if(type == 2){
+            cout << seg.Query(l, r - 1)<<endl;
+        }else{
+            seg.Update(l, r);
+        }
+    }    
 }

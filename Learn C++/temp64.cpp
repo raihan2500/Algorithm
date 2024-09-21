@@ -55,10 +55,5 @@ int32_t main(){
     TVec tobj3(str);
     cout << tobj3.sum() << endl;
 
-    vector<pair<int, int>> pr = {{1,2}, {1, 3}, {1, 3}, {1,4}};
-    TVec tobj4(pr);
-
-    cout << tobj4.sum().first <<" " << tobj4.sum().second << endl;
-
 
 }
