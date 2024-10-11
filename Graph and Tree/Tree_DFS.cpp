@@ -1,7 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int N = 14;
+const int N = 2e5 + 100;
+
+int n;
 vector<int> graph[N];
 int depth[N], height[N];
 
@@ -25,17 +27,28 @@ void dfs(int vertex, int par){
 }
 
 
-int main(){
-    int v, e;
-    cin >> e >> v;
+void reset(){
+    for(int i = 1; i <= n; i++){
+        graph[i].clear();
+        depth[i] = height[i] = 0;
+    }
+}
 
-    for(int i = 0; i < e; i++){
+void sukuna(){
+    cin >> n;
+    reset();
+
+    for(int i = 0; i < n - 1; i++){
         int v1, v2;
         cin >> v1 >> v2;
         graph[v1].push_back(v2);
         graph[v2].push_back(v1);
     }
     dfs(1, 0);
-    for(int i = 1; i <= v; i++)cout<<depth[i]<<" ";cout<<endl;
-    for(int i = 1; i <= v; i++)cout<<height[i]<<" ";cout<<endl;
+
+
+}
+
+int main(){
+    sukuna();
 }
