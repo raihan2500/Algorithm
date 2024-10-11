@@ -33,6 +33,7 @@ int main(){
         int v1, v2;
         cin >> v1 >> v2;
         graph[v1].push_back(v2);
+        graph[v2].push_back(v1);
     }
     dfs(1, 0);
     for(int i = 1; i <= v; i++)cout<<depth[i]<<" ";cout<<endl;
