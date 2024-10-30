@@ -21,7 +21,7 @@ using namespace std;
 #define forn(i,e)          for(int i=0;i<e;i++)
 #define Forn(i,e)          for(int i=1;i<=e;i++)
 #define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<"\n";nl;
+#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
@@ -32,7 +32,6 @@ const int N = 2e5 + 100;
 class SeiveAlgo{
     private:
         //Variables
-        int N = 1e6, factors_size,  num_cnt = 0, dp_cnt = 0;
         vector<int> lp;
         vector<bool>isPrime;
         set<int> divisors;
@@ -40,10 +39,11 @@ class SeiveAlgo{
         vector<grp>factors;
 
     public:
+        int N = 1e6, factors_size,  num_cnt = 0, dp_cnt = 0;
         vector<int>primes;
 
-        SeiveAlgo(int n = 1e6){
-            N = n + 100;
+        SeiveAlgo(int N = 1e6){
+            this->N = N + 5;
             lp = vector<int> (N);
             isPrime = vector<bool> (N);
             generatePrimes();
@@ -73,9 +73,9 @@ class SeiveAlgo{
             return divisors;
         }
 
+    private:
         //Segment Seive
         vector<int> segSeive(int l, int r){
-            if(l > r)swap(l, r);
             int n = r - l + 1;
             vector<bool>isPrime(n + 1);
             vector<int>segPrimes;
@@ -132,9 +132,16 @@ class SeiveAlgo{
 SeiveAlgo sv;
 
 void sukuna(){
-    int l, r;
-    cin >> l >> r;
-    print(sv.segSeive(r, l));
+    lin(n);
+    int sum = -n;
+
+    cout << n <<" ";
+    for(auto i : sv.allDivisors(n)){
+        sum += i;
+    }
+    cout << sum << endl;
+    cout << sv.num_cnt<<" " <<sv.dp_cnt<<endl;
+    
 }
 
 int32_t main(){

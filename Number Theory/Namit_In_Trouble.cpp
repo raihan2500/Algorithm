@@ -21,7 +21,7 @@ using namespace std;
 #define forn(i,e)          for(int i=0;i<e;i++)
 #define Forn(i,e)          for(int i=1;i<=e;i++)
 #define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<"\n";nl;
+#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
@@ -73,9 +73,9 @@ class SeiveAlgo{
             return divisors;
         }
 
+    private:
         //Segment Seive
         vector<int> segSeive(int l, int r){
-            if(l > r)swap(l, r);
             int n = r - l + 1;
             vector<bool>isPrime(n + 1);
             vector<int>segPrimes;
@@ -129,16 +129,33 @@ class SeiveAlgo{
         }
 };
 
-SeiveAlgo sv;
+
+SeiveAlgo sv(1e5 + 100);
+vin pf, prime = sv.primes;
+
+void preProcess(){
+    
+    for(auto i : prime){
+        pf.push_back(i * i);
+    }
+}
+
 
 void sukuna(){
-    int l, r;
-    cin >> l >> r;
-    print(sv.segSeive(r, l));
+    int n, k;
+    cin >> n >> k;
+    int lo = lower_bound(all(pf), k) - pf.begin();
+    int hi = lower_bound(all(pf), n) - pf.begin();
+    if(pf[lo] == k)lo++;
+
+    if(k >= n)cout << hi <<" " << 0 << endl;
+    else cout << hi << " " << hi - lo << endl;
+    
 }
 
 int32_t main(){
     fast_in_out;
+    preProcess();
 
     int test;   cin>>test;
     while(test--)sukuna();

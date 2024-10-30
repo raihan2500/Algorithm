@@ -21,7 +21,7 @@ using namespace std;
 #define forn(i,e)          for(int i=0;i<e;i++)
 #define Forn(i,e)          for(int i=1;i<=e;i++)
 #define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<"\n";nl;
+#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
@@ -73,9 +73,9 @@ class SeiveAlgo{
             return divisors;
         }
 
+    private:
         //Segment Seive
         vector<int> segSeive(int l, int r){
-            if(l > r)swap(l, r);
             int n = r - l + 1;
             vector<bool>isPrime(n + 1);
             vector<int>segPrimes;
@@ -131,16 +131,43 @@ class SeiveAlgo{
 
 SeiveAlgo sv;
 
-void sukuna(){
-    int l, r;
-    cin >> l >> r;
-    print(sv.segSeive(r, l));
+struct grp{int pm, cnt; void display(){cout << pm <<" " << cnt << endl;}};
+
+int calculate(int n){
+    int ans = 0;
+    for(int i = 1;; i++){
+        if((i * (i + 1) / 2) > n)break;
+        ans = i;
+    }
+    return ans;
 }
 
 int32_t main(){
     fast_in_out;
+    lin(n);
+    if(n == 1){
+        cout << 0 << endl;
+        return 0;
+    }
+    vector<grp> factors;
+    vin primes = sv.primes;
 
-    int test;   cin>>test;
-    while(test--)sukuna();
-    return 0;
+    for(int i = 0; primes[i] * primes[i] <= n; i++){
+        if(n % primes[i])continue;
+        int m = n;
+        int cnt = 0;
+        while(m % primes[i] == 0){
+            cnt++;
+            m /= primes[i];
+        }
+        factors.push_back({primes[i], cnt});
+    }
+
+        
+    int ans = 0;
+    for(auto i : factors){
+        ans += calculate(i.cnt);
+    }
+
+    cout << max(1ll, ans) << endl;
 }

@@ -21,7 +21,7 @@ using namespace std;
 #define forn(i,e)          for(int i=0;i<e;i++)
 #define Forn(i,e)          for(int i=1;i<=e;i++)
 #define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<"\n";nl;
+#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
@@ -49,16 +49,16 @@ class SeiveAlgo{
             generatePrimes();
         }
 
-        vector<int> primeFactors(int n){
-            vector<int> v;
+        vector<pr> primeFactors(int n){
+            vector<pr> v;
             factors.clear();
             while(n > 1){
                 int pm = lp[n], cnt = 0;
                 while(n % pm == 0){
-                    v.push_back(pm);
                     n /= pm;
                     cnt++;
                 }
+                v.push_back({pm, cnt});
                 factors.push_back({pm, cnt});
             }
             return v;
@@ -73,9 +73,9 @@ class SeiveAlgo{
             return divisors;
         }
 
+    private:
         //Segment Seive
         vector<int> segSeive(int l, int r){
-            if(l > r)swap(l, r);
             int n = r - l + 1;
             vector<bool>isPrime(n + 1);
             vector<int>segPrimes;
@@ -129,18 +129,29 @@ class SeiveAlgo{
         }
 };
 
-SeiveAlgo sv;
-
-void sukuna(){
-    int l, r;
-    cin >> l >> r;
-    print(sv.segSeive(r, l));
-}
+SeiveAlgo sv(1e5);
 
 int32_t main(){
     fast_in_out;
+    int n, k;
+    cin >> n >> k;
+    vin v;
+    forn(i,n){
+        lin(x);
+        if(sv.primeFactors(x).size() == 1 or x == 1)v.push_back(x);
+    }
+    int cnt = 0, ans = 0, one = 0;
+    n = v.size();
+    sort(all(v));
+    print(v);
 
-    int test;   cin>>test;
-    while(test--)sukuna();
-    return 0;
+    for(int i = 0; i < n; i++){
+        if(v[i] == 1){one++;continue;}
+        if(sv.primeFactors(v[i]).front().second == k)cnt++;
+    }
+    ans = one * cnt;
+    cout << ans << endl;
+
+
+    
 }

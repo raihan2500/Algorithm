@@ -13,7 +13,6 @@ using namespace std;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
-#define ppfr(v)             v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -28,50 +27,47 @@ using namespace std;
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const long long INF = 1e18;
 const int M = 1e9 + 7;
-const int N = 1e3 + 100;
+const int N = 1e6 + 100;
 
-vector<pr> movement = {{0, 1}, {1, 0}};
+vin isPrime(N);
+vector<vin> pf(N);
 
-int n, m;
-vector<string> v;
-vector<vin> dp(N, vin (N, -1));
-
-bool isValid(int x, int y){
-    return x >= 0 && x < n && y >= 0 && y < m;
-}
-
-int recur(int i, int j){
-
-    if(i == n - 1 && j == m - 1)return 1;
-    if(dp[i][j] != -1)return dp[i][j];
-    int ans = 0;
-    for(auto mv : movement){
-        int x = i + mv.first;
-        int y = j + mv.second;
-        if(!isValid(x, y))continue;
-        if(v[x][y] == '#')continue;
-        ans += recur(x, y);
-        ans %= M;
+void seive(){
+    for(int i = 2; i < N; i++){
+        if(isPrime[i] == 0){
+            isPrime[i] = 1;
+            for(int j = i + i; j < N; j += i){
+                isPrime[j]++;
+            }
+        }
     }
-    return dp[i][j] = ans;
-}
-
-void sukuna(int test){
-    cin >> n >> m;
-    forn(i,n){
-        string str;
-        cin >> str;
-        v.push_back(str);
+    for(int i = 0; i <= 10; i++){
+        for(int j = 0; j < N; j++){
+            if(isPrime[j] == i)pf[i].push_back(1);
+            else pf[i].push_back(0);
+        }
     }
 
-    cout << recur(0, 0) << endl;
 
+    pf[0][1] = 1;
+    for(int i = 0; i <= 10; i++){
+        for(int j = 1; j < N; j++){
+            pf[i][j] += pf[i][j - 1];
+        }
+    }
+}
+
+void sukuna(){
+    int a, b, n;
+    cin >> a >> b >> n; 
+    cout << pf[n][b] - pf[n][a - 1] << endl;
 }
 
 int32_t main(){
     fast_in_out;
+    seive();
 
-    int test = 1;
-    for(int i = 1; i <= test; i++)sukuna(i);
+    int test;   cin>>test;
+    while(test--)sukuna();
     return 0;
 }

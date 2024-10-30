@@ -1,9 +1,5 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/tree_policy.hpp>
-#include<ext/pb_ds/assoc_container.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
 
 #define int                long long
 
@@ -17,7 +13,6 @@ using namespace __gnu_pbds;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
-#define ppfr(v)            v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -30,58 +25,38 @@ using namespace __gnu_pbds;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-template <typename T>      using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
 const long long INF = 1e18;
 const int M = 1e9 + 7;
 const int N = 2e5 + 100;
+int a, b, c;
 
-int n;
-vin v, dp(N, -1), track(N);
-
-int recur(int ind){
-    if(ind >= n)return 0;
-    if(dp[ind] != -1)return dp[ind];
-
-    int a = recur(ind + 1) + abs(v[ind] - v[ind + 1]);
-    int b = recur(ind + 2) + abs(v[ind] - v[ind + 2]);
-    
-    if(a < b){
-        track[ind + 1] = 1;
-        return dp[ind] = a;
-    }else{
-        track[ind + 2] = 1;
-        return dp[ind] = b;
-    }
+bool func(int n){
+    return a + n > b + (c - n);
 }
 
-void sukuna(int test){
-    cin >> n;
-    forn(i,n){
-        lin(x);
-        v.pb(x);
-    }
-    forn(i,4)v.pb(v.back());
-    cout << recur(0) << endl;
+void sukuna(){
+    cin >> a >> b >> c;
+    int lo = 0, hi = c, mid; 
+    int ans = 0;
 
-    vin trac;
-    trac.pb(v.front());
-    forn(i, n){
-        if(track[i + 2]){
-            trac.pb(v[i + 2]);
-            i++;
+    while(hi > lo){
+        int mid = (lo + hi) / 2;
+
+        if(!func(mid)){
+            lo = mid + 1;
         }else{
-            trac.pb(v[i + 1]);
+            hi = mid;
         }
     }
-    print(trac);
 
+    if(!func(lo))lo++;
+    cout << c - lo + 1 << endl;
 }
 
 int32_t main(){
     fast_in_out;
 
-    int test = 1;
-    for(int i = 1; i <= test; i++)sukuna(i);
+    int test;   cin>>test;
+    while(test--)sukuna();
     return 0;
 }

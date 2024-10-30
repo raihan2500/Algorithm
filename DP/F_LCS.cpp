@@ -36,46 +36,32 @@ const long long INF = 1e18;
 const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
-int n;
-vin v, dp(N, -1), track(N);
+string s, t;
+int n, m;
 
-int recur(int ind){
-    if(ind >= n)return 0;
-    if(dp[ind] != -1)return dp[ind];
+int recur(int i, int j){
 
-    int a = recur(ind + 1) + abs(v[ind] - v[ind + 1]);
-    int b = recur(ind + 2) + abs(v[ind] - v[ind + 2]);
-    
-    if(a < b){
-        track[ind + 1] = 1;
-        return dp[ind] = a;
-    }else{
-        track[ind + 2] = 1;
-        return dp[ind] = b;
+    if(i == n)return 0;
+    if(j == n)return 0;
+
+    int a = recur(i + 1, j);
+    int b = 1, mx = 0;
+
+    for(; j < m; j++){
+        if(s[i] == t[j]){
+            b = 1 + recur(i + 1, j);
+        }
     }
+
+    if(b > a)return b;
+    else return a;
+
 }
 
 void sukuna(int test){
-    cin >> n;
-    forn(i,n){
-        lin(x);
-        v.pb(x);
-    }
-    forn(i,4)v.pb(v.back());
-    cout << recur(0) << endl;
-
-    vin trac;
-    trac.pb(v.front());
-    forn(i, n){
-        if(track[i + 2]){
-            trac.pb(v[i + 2]);
-            i++;
-        }else{
-            trac.pb(v[i + 1]);
-        }
-    }
-    print(trac);
-
+    cin >> s >> t;
+    int n = s.size(), m = t.size();
+    cout << recur(0, 0) << endl;
 }
 
 int32_t main(){

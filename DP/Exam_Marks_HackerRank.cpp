@@ -1,9 +1,5 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/tree_policy.hpp>
-#include<ext/pb_ds/assoc_container.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
 
 #define int                long long
 
@@ -17,7 +13,6 @@ using namespace __gnu_pbds;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
-#define ppfr(v)            v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -30,58 +25,50 @@ using namespace __gnu_pbds;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-template <typename T>      using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
 const long long INF = 1e18;
 const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
-int n;
-vin v, dp(N, -1), track(N);
+int n, m;
+vin v;
+vector<vin> temp(1005, vin (1200, -1)), dp;
+bool isDone = false;
 
-int recur(int ind){
-    if(ind >= n)return 0;
-    if(dp[ind] != -1)return dp[ind];
-
-    int a = recur(ind + 1) + abs(v[ind] - v[ind + 1]);
-    int b = recur(ind + 2) + abs(v[ind] - v[ind + 2]);
+int recur(int ind, int rem){
     
-    if(a < b){
-        track[ind + 1] = 1;
-        return dp[ind] = a;
-    }else{
-        track[ind + 2] = 1;
-        return dp[ind] = b;
-    }
+    if(isDone)return true;
+    if(rem == 0)return isDone = true;
+    if(rem < 0)return 0;
+    if(ind >= n)return 0;
+
+    if(dp[ind][rem] != -1)return dp[ind][rem];
+
+    int x = recur(ind + 1, rem);
+    int y = recur(ind + 1, rem - v[ind]);
+
+    return dp[ind][rem] = x or y;    
 }
 
-void sukuna(int test){
-    cin >> n;
+void sukuna(){
+    dp = temp;
+    v.clear();
+    isDone = false;
+
+    cin >> n >> m;
+    m = 1000 - m;
     forn(i,n){
         lin(x);
-        v.pb(x);
+        v.push_back(x);
     }
-    forn(i,4)v.pb(v.back());
-    cout << recur(0) << endl;
 
-    vin trac;
-    trac.pb(v.front());
-    forn(i, n){
-        if(track[i + 2]){
-            trac.pb(v[i + 2]);
-            i++;
-        }else{
-            trac.pb(v[i + 1]);
-        }
-    }
-    print(trac);
-
+    if(recur(0, m))yes;
+    else no;    
 }
 
 int32_t main(){
     fast_in_out;
 
-    int test = 1;
-    for(int i = 1; i <= test; i++)sukuna(i);
+    int test;   cin>>test;
+    while(test--)sukuna();
     return 0;
 }

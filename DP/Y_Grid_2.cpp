@@ -1,9 +1,5 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/tree_policy.hpp>
-#include<ext/pb_ds/assoc_container.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
 
 #define int                long long
 
@@ -17,7 +13,7 @@ using namespace __gnu_pbds;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
-#define ppfr(v)            v.erase(v.begin());
+#define ppfr(v)             v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -30,51 +26,48 @@ using namespace __gnu_pbds;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-template <typename T>      using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
 const long long INF = 1e18;
 const int M = 1e9 + 7;
-const int N = 2e5 + 100;
+const int N = 1e3 + 100;
 
-int n;
-vin v, dp(N, -1), track(N);
+vector<pr> movement = {{0, 1}, {1, 0}};
 
-int recur(int ind){
-    if(ind >= n)return 0;
-    if(dp[ind] != -1)return dp[ind];
+int n, m, k;
+vector<string> v;
+vector<vin> dp(N, vin (N, -1));
 
-    int a = recur(ind + 1) + abs(v[ind] - v[ind + 1]);
-    int b = recur(ind + 2) + abs(v[ind] - v[ind + 2]);
-    
-    if(a < b){
-        track[ind + 1] = 1;
-        return dp[ind] = a;
-    }else{
-        track[ind + 2] = 1;
-        return dp[ind] = b;
+bool isValid(int x, int y){
+    return x >= 0 && x < n && y >= 0 && y < m;
+}
+
+int recur(int i, int j){
+
+    if(i == n - 1 && j == m - 1)return 1;
+    if(dp[i][j] != -1)return dp[i][j];
+    int ans = 0;
+    for(auto mv : movement){
+        int x = i + mv.first;
+        int y = j + mv.second;
+        if(!isValid(x, y))continue;
+        if(v[x][y] == '#')continue;
+        ans += recur(x, y);
+        ans %= M;
     }
+    return dp[i][j] = ans;
 }
 
 void sukuna(int test){
-    cin >> n;
-    forn(i,n){
-        lin(x);
-        v.pb(x);
+    cin >> n >> m >> k;
+    string str;
+    forn(i,m)str.push_back('.');
+    forn(i,n)v.push_back(str);
+    forn(i, k){
+        int x, y;
+        cin >> x >> y;
+        v[--x][--y] = '#';
     }
-    forn(i,4)v.pb(v.back());
-    cout << recur(0) << endl;
-
-    vin trac;
-    trac.pb(v.front());
-    forn(i, n){
-        if(track[i + 2]){
-            trac.pb(v[i + 2]);
-            i++;
-        }else{
-            trac.pb(v[i + 1]);
-        }
-    }
-    print(trac);
+    
+    cout << recur(0, 0) << endl;
 
 }
 

@@ -13,7 +13,6 @@ using namespace std;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
-#define ppfr(v)             v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -28,50 +27,39 @@ using namespace std;
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 const long long INF = 1e18;
 const int M = 1e9 + 7;
-const int N = 1e3 + 100;
+const int N = 2e5 + 100;
+int n;
+struct grp{int x, y, z; void display(){cout << x <<" " << y <<" " << z << endl;}};
+vector<grp> v;
 
-vector<pr> movement = {{0, 1}, {1, 0}};
+vector<pr> dp(N, {-1, -1});
 
-int n, m;
-vector<string> v;
-vector<vin> dp(N, vin (N, -1));
+int recur(int ind, int prev){
 
-bool isValid(int x, int y){
-    return x >= 0 && x < n && y >= 0 && y < m;
-}
-
-int recur(int i, int j){
-
-    if(i == n - 1 && j == m - 1)return 1;
-    if(dp[i][j] != -1)return dp[i][j];
-    int ans = 0;
-    for(auto mv : movement){
-        int x = i + mv.first;
-        int y = j + mv.second;
-        if(!isValid(x, y))continue;
-        if(v[x][y] == '#')continue;
-        ans += recur(x, y);
-        ans %= M;
-    }
-    return dp[i][j] = ans;
-}
-
-void sukuna(int test){
-    cin >> n >> m;
-    forn(i,n){
-        string str;
-        cin >> str;
-        v.push_back(str);
+    if(ind == n){
+        return 0;
     }
 
-    cout << recur(0, 0) << endl;
+    int x = recur(ind + 1, prev);
+    int y = x;
+    if(prev < v[ind].x){
+        y = v[ind].z + recur(ind + 1, v[ind].y);
+    }
 
+    return max(x, y);
 }
 
 int32_t main(){
     fast_in_out;
+    cin >> n;
+    forn(i,n){
+        int x, y, z;
+        cin >> x >> y >> z;
+        v.push_back({x, y, z});
+    }
+    sort(all(v), [](grp a, grp b){return a.x < b.x;});
 
-    int test = 1;
-    for(int i = 1; i <= test; i++)sukuna(i);
-    return 0;
+    cout << recur(0, 0) << endl;
+    
+    
 }

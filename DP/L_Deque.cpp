@@ -34,48 +34,43 @@ template <typename T>      using ordered_set = tree<T, null_type, less<T>, rb_tr
 
 const long long INF = 1e18;
 const int M = 1e9 + 7;
-const int N = 2e5 + 100;
+const int N = 3e3 + 10;
 
-int n;
-vin v, dp(N, -1), track(N);
+vector<vector<vin>> dp(N, vector<vin> (N, vin(2, -1)));
 
-int recur(int ind){
-    if(ind >= n)return 0;
-    if(dp[ind] != -1)return dp[ind];
+int n, dp_cnt = 0;
+vin v;
 
-    int a = recur(ind + 1) + abs(v[ind] - v[ind + 1]);
-    int b = recur(ind + 2) + abs(v[ind] - v[ind + 2]);
-    
-    if(a < b){
-        track[ind + 1] = 1;
-        return dp[ind] = a;
+int recur(int i, int j, bool flg){ dp_cnt++;
+
+    if(i > j)return 0;
+    if(dp[i][j][flg] != -1)return dp[i][j][flg];
+
+    int a = 0, b = 0;
+    if(flg){
+        a = v[i] + recur(i + 1, j, !flg);
+        b = v[j] + recur(i, j - 1, !flg);
+        return dp[i][j][flg] = max(a, b);
+
     }else{
-        track[ind + 2] = 1;
-        return dp[ind] = b;
+        a = recur(i + 1, j, !flg);
+        b = recur(i, j - 1, !flg);
+        return dp[i][j][flg] = min(a, b);
     }
+
 }
+
 
 void sukuna(int test){
     cin >> n;
     forn(i,n){
         lin(x);
-        v.pb(x);
+        v.push_back(x);
     }
-    forn(i,4)v.pb(v.back());
-    cout << recur(0) << endl;
+    int a = recur(0, n - 1, 1);
+    int b = accumulate(all(v), 0ll) - a;
 
-    vin trac;
-    trac.pb(v.front());
-    forn(i, n){
-        if(track[i + 2]){
-            trac.pb(v[i + 2]);
-            i++;
-        }else{
-            trac.pb(v[i + 1]);
-        }
-    }
-    print(trac);
-
+    cout << a - b << endl;   
 }
 
 int32_t main(){
