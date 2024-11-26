@@ -11,3 +11,10 @@
 
 That means still the properties are remain in m even after moding by n, That is interesting
 
+
+# Primality Test
+Is p prime
+
+Test:
+if p is a prime number then for all a from (1 to p - 1)
+    (a^p - a % p) == 0
