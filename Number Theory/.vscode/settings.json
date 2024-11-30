@@ -74,6 +74,9 @@
     "ranges": "cpp",
     "stacktrace": "cpp",
     "regex": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "ostream": "cpp",
+    "compare": "cpp",
+    "cstdint": "cpp"
   }
 }

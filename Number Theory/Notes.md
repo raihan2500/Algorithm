@@ -18,3 +18,5 @@ Is p prime
 Test:
 if p is a prime number then for all a from (1 to p - 1)
     (a^p - a % p) == 0
+
+Note: That will not 100% accurate even for some composite number this will also work (eg: 561)
