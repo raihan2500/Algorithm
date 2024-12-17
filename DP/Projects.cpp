@@ -1,65 +1,45 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int                long long
-
-#define yes                cout<<"YES\n"
-#define no                 cout<<"NO\n"
-#define nl                 cout<<"\n"
-#define endl               "\n"
-
-#define lin(n)             int n;cin>>n;
-#define vin                vector<int>
-#define pr                 pair<int, int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const long long INF = 1e18;
+#define int long long
+#define all(x) x.begin(), x.end()
 const int M = 1e9 + 7;
-const int N = 2e5 + 100;
+const int N = 2e5 + 10;
+
+struct grp{int l, r, p;};
+
 int n;
-struct grp{int x, y, z; void display(){cout << x <<" " << y <<" " << z << endl;}};
 vector<grp> v;
+vector<int> st, dp(N, -1);
 
-vector<pr> dp(N, {-1, -1});
+int recur(int ind){
 
-int recur(int ind, int prev){
+    if(ind >= n)return 0;
+    if(dp[ind] != -1)return dp[ind];
 
-    if(ind == n){
-        return 0;
-    }
+    int a = recur(ind + 1);
+    int lb = lower_bound(all(st), v[ind].r + 1) - st.begin();
+    int b = v[ind].p + recur(lb);
 
-    int x = recur(ind + 1, prev);
-    int y = x;
-    if(prev < v[ind].x){
-        y = v[ind].z + recur(ind + 1, v[ind].y);
-    }
-
-    return max(x, y);
+    return dp[ind] = max(a, b);    
 }
 
-int32_t main(){
-    fast_in_out;
-    cin >> n;
-    forn(i,n){
-        int x, y, z;
-        cin >> x >> y >> z;
-        v.push_back({x, y, z});
-    }
-    sort(all(v), [](grp a, grp b){return a.x < b.x;});
 
-    cout << recur(0, 0) << endl;
-    
-    
+int32_t main(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        int l, r, p;
+        cin >> l >> r >> p;
+        v.push_back({l, r, p});
+    }
+
+    sort(v.begin(), v.end(),[](grp a, grp b){
+        if(a.l < b.l)return true;
+        if(a.l == b.l)return a.r < b.r;
+        return false;
+    });
+
+    for(auto i : v)st.push_back(i.l);
+
+    cout << recur(0) << endl;
 }

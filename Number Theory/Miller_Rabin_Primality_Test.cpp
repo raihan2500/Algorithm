@@ -38,7 +38,6 @@ bool is_prime(int n, int iter = 5){
     if(n < 4)return n == 2 || n == 3;
     
     int p = 0, d = n - 1;
-    
     while((d & 1) == 0){
         d >>= 1;
         p++;
@@ -55,13 +54,9 @@ bool is_prime(int n, int iter = 5){
 
 
 int32_t main(){
-    int q;
-    cin >> q;
-
-    while(q--){
-        int n; cin >> n;
-        if(is_prime(n))cout <<"Yes" << endl;
-        else cout << "No" << endl;
-    }
-  
+    
+    int n;
+    cin >> n;
+    if(is_prime(n))cout <<"Prime" << endl;
+    else cout <<"Not prime" << endl;
 }
