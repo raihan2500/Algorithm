@@ -1,74 +1,84 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int                long long
-
-#define yes                cout<<"YES\n"
-#define no                 cout<<"NO\n"
-#define nl                 cout<<"\n"
-#define endl               "\n"
-
-#define lin(n)             int n;cin>>n;
-#define vin                vector<int>
-#define pr                 pair<int, int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const long long INF = 1e18;
+#define int long long
 const int M = 1e9 + 7;
-const int N = 2e5 + 100;
+const int N = 2e5 + 10;
 
-bool primeChk(int n){
-    for(int i = 2; i * i <= n; i++){
-        if(n % i == 0)return false;
+
+using u128 = __uint128_t;
+
+int binExp(int a, int b, int M = 1e9 + 7){
+    int ans = 1;    a %= M; b %= M;
+    
+    while(b > 0){
+        if(b & 1)ans = ((u128)(ans % M) * (a % M)) % M;
+        b >>= 1;
+        a = ((u128)(a % M) * (a % M)) % M;
     }
+    return ans;
+}
+
+int mmiOfX(int b){ return binExp(b, M - 2); }
+
+
+bool is_composite(int n, int a, int d, int p){
+    int x = binExp(a, d, n);
+    if(x == 1 or x == n - 1)return false;
+
+    for(int i = 0; i < p - 1; i++){
+        x = (u128)x * x % n;
+        if(x == n - 1)return false;
+    }
+
     return true;
 }
 
-void sukuna(int n){
-    int m = n;
-    map<int, int> mp;
-    for(int i = 2; i * i <= n; i++){
-        if(m % i != 0)continue;
-        while(m % i == 0){
-            if(i == m){
-                m = 1;
-                continue;
-            }
-            if(primeChk(i))mp[i]++;
-            if(primeChk(m / i)){
-                if(m / i != i)mp[m / i]++;
-            }
-            // cout << i <<" " << m/ i << endl;
-            m /= i;
+bool is_prime(int n, int iter = 5){
+    if(n < 4)return n == 2 || n == 3;
+    
+    int p = 0, d = n - 1;
+    while((d & 1) == 0){
+        d >>= 1;
+        p++;
+    }
+
+    mt19937_64 rn;
+    for(int i = 0; i < iter; i++){
+        int a = 2 + rn() % (n - 3);
+        if(is_composite(n, a, d, p))return false;
+    }
+
+    return true;
+}
+
+void pmF(int n){
+    int cnt = 0;
+    while(n % 2 == 0){
+        n >>= 1;
+        cnt++;
+    }
+    if(cnt)cout << 2 << "^" << cnt <<" ";
+
+    for(int i = 3; i * i <= n; i += 2){
+        if(n % i)continue;
+        if(!is_prime(i))continue;
+        cnt = 0;
+        while(n % i == 0){
+            n /= i;
+            cnt++;
         }
+        cout << i <<"^"<< cnt <<" ";
     }
-    for(auto i : mp){
-        if(i.first == 1)continue;
-        cout << i.first<<"^"<<i.second <<" ";
-    }
-    nl;
-    
-    
+    if(n > 1)cout << n <<"^1" << endl;
+    return;
 }
 
 int32_t main(){
-    fast_in_out;
     int n;
     cin >> n;
     while(n != 0){
-        sukuna(n);
+        pmF(n);
         cin >> n;
     }
 }

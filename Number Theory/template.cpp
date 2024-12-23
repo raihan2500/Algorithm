@@ -1,5 +1,12 @@
 #include<bits/stdc++.h>
+#include<ext/pb_ds/tree_policy.hpp>
+#include<ext/pb_ds/assoc_container.hpp>
+
 using namespace std;
+using namespace __gnu_pbds;
+
+using u64 = uint64_t;
+using u128 = __uint128_t;
 
 #define int                long long
 
@@ -13,6 +20,7 @@ using namespace std;
 #define pr                 pair<int, int>
 #define pb(n)              push_back(n)
 #define pp                 pop_back()
+#define ppfr(v)            v.erase(v.begin());
 #define all(x)             x.begin(),x.end()
 
 #define fi                 first
@@ -25,115 +33,134 @@ using namespace std;
 #define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
 
 #define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+template <typename T>      using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+
 const long long INF = 1e18;
 const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
 
-class SeiveAlgo{
-    private:
-        //Variables
-        vector<int> lp;
-        vector<bool>isPrime;
-        set<int> divisors;
-        struct grp{int pm, cnt;};
-        vector<grp>factors;
+//Initialize first Factors::init();
+namespace Factors{
+    #define int long long
+    mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+    const int N = 1e6 + 100;
+    bool isPrime[N]; int hp[N];
+    vector<int> primes;
 
-    public:
-        int N = 1e6, factors_size,  num_cnt = 0, dp_cnt = 0;
-        vector<int>primes;
+    void init(){
+        memset(isPrime, 1, sizeof(isPrime));
+        isPrime[0] = isPrime[1] = 0;
 
-        SeiveAlgo(int N = 1e6){
-            this->N = N + 5;
-            lp = vector<int> (N);
-            isPrime = vector<bool> (N);
-            generatePrimes();
+        for(int i = 2; i < N; i++){
+            if(isPrime[i]){
+                hp[i] = i;
+                for(int j = i + i; j < N; j += i){
+                    isPrime[j] = 0;
+                    hp[j] = i;
+                }
+            }
         }
+        for(int i = 2; i < N; i++){
+            if(isPrime[i]){
+                primes.push_back(i);
+            }
+        }
+    }
+    
+    int binExp(int a, int b, int M = 1e9 + 7){
+        int ans = 1;    a %= M; b %= M;
+        
+        while(b > 0){
+            if(b & 1)ans = ((__uint128_t)(ans % M) * (a % M)) % M;
+            b >>= 1;
+            a = ((__uint128_t)(a % M) * (a % M)) % M;
+        }
+        return ans;
+    }
 
-        vector<int> primeFactors(int n){
-            vector<int> v;
-            factors.clear();
+    //Miller Rabin primality test
+    bool is_composite(int n, int a, int d, int p){
+        int x = binExp(a, d, n);
+        if(x == 1 or x == n - 1)return false;
+    
+        for(int i = 0; i < p - 1; i++){
+            x = (__uint128_t)x * x % n;
+            if(x == n - 1)return false;
+        }
+    
+        return true;
+    }
+    
+    bool miller_rabin(int n, int iter = 5){
+        if(n < 4)return n == 2 || n == 3;
+        
+        int p = 0, d = n - 1;
+        while((d & 1) == 0){
+            d >>= 1;
+            p++;
+        }
+    
+        for(int i = 0; i < iter; i++){
+            int a = 2 + rnd() % (n - 3);
+            if(is_composite(n, a, d, p))return false;
+        }
+    
+        return true;
+    }
+    
+    //Pollard rho
+    int func(int x, int c, int mod){
+        return ((__uint128_t) x * x % mod + c) % mod;
+    }    
+
+    int rho(int n){
+        int c = 1 + rnd() % (n - 2);
+        int x =  2 + rnd() % (n - 2);
+        int y = x, d = 1;
+
+        while(d == 1){
+            x = func(x, c, n);
+            y = func(func(y, c, n), c, n);
+            d = __gcd(abs(x - y), n);
+        }
+        return d;
+    }
+
+    vector<int> factorize(int n){
+        if(n == 1)return {1};
+        if(miller_rabin(n))return {n};
+        vector<int> factors, temp;
+        
+        if(n < N){
             while(n > 1){
-                int pm = lp[n], cnt = 0;
+                int pm = hp[n];
                 while(n % pm == 0){
-                    v.push_back(pm);
+                    factors.push_back(pm);
                     n /= pm;
-                    cnt++;
-                }
-                factors.push_back({pm, cnt});
-            }
-            return v;
-        }
-
-        //All the divisors of a number
-        set<int> allDivisors(int n){
-            primeFactors(n);
-            factors_size = factors.size();
-            divisors.clear();
-            allDivisorsGenerator(0, 1);
-            return divisors;
-        }
-
-    private:
-        //Segment Seive
-        vector<int> segSeive(int l, int r){
-            int n = r - l + 1;
-            vector<bool>isPrime(n + 1);
-            vector<int>segPrimes;
-
-            for(int i = 0; primes[i] * primes[i] <= r; i++){
-                int st = ceil(l * 1.0 / primes[i]) * primes[i];
-                for(int j = st; j <= r; j += primes[i]){
-                    if(j == primes[i])continue;
-                    isPrime[j - l] = true;
                 }
             }
-            
-            for(int i = 0; i < n; i++){
-                if(!isPrime[i]){
-                    if(i + l > 1){
-                        segPrimes.push_back(i + l);
-                    }
-                }
-            }
-            return segPrimes;
+            return factors;
         }
 
-    private:
-        void allDivisorsGenerator(int currIndex, int currDivisor){
-            dp_cnt++;
-            if(currIndex == factors_size){
-                num_cnt++;
-                divisors.insert(currDivisor);
-                return;
-            }
-            for(int i = 0; i <= factors[currIndex].cnt; i++){
-                allDivisorsGenerator(currIndex + 1, currDivisor);
-                currDivisor *= factors[currIndex].pm;
-            }
-        }
+        int x = rho(n);
+        factors = factorize(x);
+        temp = factorize(n / x);
+        factors.insert(factors.end(), temp.begin(), temp.end());
+        return factors;
+    }
+}
 
-        void generatePrimes(){
-            isPrime[0] = isPrime[1] = true;
-            for(int i = 2; i < N; i++){
-                if(!isPrime[i]){
-                    lp[i] = i;
-                    for(int j = i + i; j < N; j += i){
-                        isPrime[j] = true;
-                        if(lp[j] == 0)lp[j] = i;
-                    }
-                }
-            }
-            for(int i = 2; i < N; i++){
-                if(!isPrime[i])primes.push_back(i);
-            }
-        }
-};
-
-SeiveAlgo sv;
+void sukuna(int test){
+    lin(n);
+    Factors::init();
+    print(Factors::factorize(n));   
+}
 
 int32_t main(){
-    lin(n);
-    print(sv.allDivisors(n));
-    cout << sv.num_cnt<<" " << sv.dp_cnt << endl;
+    fast_in_out;
+
+    int test = 1;   cin>>test;
+    for(int i = 1; i <= test; i++)sukuna(i);
+    return 0;
 }
