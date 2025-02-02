@@ -1,45 +1,87 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-typedef                    long long ll;
-typedef                    long double ld;
-#define int                long long
+#ifdef DEBUG
+#include<algo/debug.h>
+#include<algo/resources.h>
+#else
+#   define clog if (0) cerr
+#   define DB(...)
+#   define db(...) "" 
+#endif
 
-#define yes                cout<<"YES\n";
-#define no                 cout<<"NO\n";
-#define nl                 cout<<"\n";
-#define endl               "\n"
-
-#define lin(n)             int n;cin>>n;
-#define vin                vector<int>
-#define pr                 pair<int, int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const long long INF = 1e18;
+#define int long long
 const int M = 1e9 + 7;
-const int N = 2e5 + 100;
+const int N = 2e5 + 10;
 
-void sukuna(){
-    yes
-    
+int n;
+vector<vector<int>> graph(N);
+
+
+namespace Lca{
+    int lgMx = 20;
+    int lca[N][25];
+    int levl[N], par[N];
+
+    void dfs(int v = 1, int p = 0){
+        par[v] = p;
+        for(auto child : graph[v]){
+            if(child == p)continue;
+            levl[child] = levl[v] + 1;
+            dfs(child, v);
+        }
+    }
+
+    void binLift(int v = 1, int p = 0){
+        lca[v][0] = p;
+        for(int i = 1; i <= lgMx; i++){
+            lca[v][i] = lca[lca[v][i - 1]][i - 1];
+        }
+        for(auto child : graph[v]){
+            if(child == p)continue;
+            binLift(child, v);
+        }
+    }
+
+    void init(int v = 1, int p = 0){
+        dfs(v, p); binLift(v, p);
+    }
+
+    int get(int a, int b){
+        if(levl[a] < levl[b])swap(a, b);
+        int d = levl[a] - levl[b];
+        
+        while(d > 0){
+            int i = log2(d);
+            a = lca[a][i];
+            d -= (1 << i);
+        }
+        if(a == b)return a;
+        
+        for(int i = lgMx; i >= 0; i--){
+            if(lca[a][i] == 0)continue;
+            if(lca[a][i] == lca[b][i])continue;
+
+            a = lca[a][i];
+            b = lca[b][i];
+        }
+        return lca[a][0];
+    }
 }
 
-int32_t main(){
-    fast_in_out;
 
-    int test;	cin>>test;
-    while(test--)sukuna();
-    return 0;
+int32_t main(){
+    cin >> n;
+    for(int i = 1; i < n; i++){
+        int x, y;
+        cin >> x >> y;
+        graph[x].push_back(y);
+        graph[y].push_back(x);
+    }
+
+    Lca::init();
+
+    int x, y;
+    cin >> x >> y;
+    cout << Lca::get(x, y) << endl;
 }
