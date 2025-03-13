@@ -10,7 +10,9 @@ string digits;
 
 
 int recur(int ind, bool flg, bool lead, int cnt){
-    if(ind >= n)return __builtin_popcount(cnt) >= k;
+    if(ind >= n){
+        if(__builtin_popcount(cnt) <= k)return 1;
+    }
     
     int ans = 0, limit = flg ? digits[ind] : 9;
     for(int d = 0; d <= limit; d++){

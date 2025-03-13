@@ -167,8 +167,9 @@ namespace Phi{
 
 
 int32_t main(){
-    Phi::phi_1_to_n(1e6);
     Pollard::init();
+    Phi::phi_1_to_n(1e6);
+    
     int n;
     cin >> n;
 

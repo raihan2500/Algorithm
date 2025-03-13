@@ -1,0 +1,1 @@
+{"name":"Local: graphical_bst","url":"/home/raihan/Desktop/Algorithm_practice/Graph and Tree/graphical_bst.cpp","tests":[{"id":1740910252732,"input":"6\n5 1 2 10 7 11\n","output":"0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/raihan/Desktop/Algorithm_practice/Graph and Tree/graphical_bst.cpp","group":"local","local":true}

@@ -1,54 +1,38 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define print(arr)         for(auto x: arr)cout<<x<<' '; cout<<endl;
-#define int        long long
-const int M = 1e9 + 7;
-int dp[1001][1001];
-vector<string> str;
-int n, ans = 0, dp_counter = 0;
 
+#define int long long
+const int M = 1e9 + 7;
+const int N = 1e3 + 10;
+
+int n;
+int dp[N][N];
+vector<string> grid;
 
 int recur(int i, int j){
-    dp_counter ++;
+    if(i == n - 1 and j == n - 1)return grid[i][j] == '.';
+    if(i >= n or j >= n)return 0;
+    if(grid[i][j] == '*')return 0;
+    if(dp[i][j] != -1)return dp[i][j];
 
-    int x = 0, y = 0;
+    int a = recur(i, j + 1);
+    int b = recur(i + 1, j);
 
-    if(str[i][j] == '*')return 0;
-
-    if(i == n - 1 && j == n - 1){
-        ans++;
-        return 1;
-    }
-
-    
-    if(i < n - 1){
-        if(dp[i + 1][j] == -1){
-            dp[i + 1][j] = recur(i + 1, j);
-        }
-        x = dp[i + 1][j];
-    }
-
-    if(j < n - 1){
-        if(dp[i][j + 1]){
-            dp[i][j + 1] = recur(i, j + 1);
-        }
-        y = dp[i][j + 1];
-    }
-
-    return (x + y) % M;
-        
+    return dp[i][j] = (a + b) % M;
 }
 
 
 int32_t main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr); cout.tie(nullptr);
     memset(dp, -1, sizeof(dp));
 
-    cin>>n;
-    for(int i = 0; i < n; i++){
-        string s; cin>>s;
-        str.push_back(s);
+    cin >> n;
+    for(int i = 1; i <= n; i++){
+        string str;
+        cin >> str;
+        grid.push_back(str);
     }
 
-    cout<<recur(0, 0)<<endl;  
-
+    cout << recur(0, 0) << endl;  
 }

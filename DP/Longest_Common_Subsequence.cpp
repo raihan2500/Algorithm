@@ -31,8 +31,27 @@ int longestCommonSubsequence(string text1, string text2) {
     return recur(0, 0);        
 }
 
+int LCS_iterative(string s, string t){
+    int n = s.size(), m = t.size();
+
+    memset(dp, 0, sizeof(dp));
+    for(int i = n - 1; i >= 0; i--){
+        for(int j = m - 1; j >= 0; j--){
+            int x = 0;
+            if(s[i] == t[j])x = 1 + dp[i + 1][j + 1];
+            int a = dp[i + 1][j];
+            int b = dp[i][j +  1];
+            dp[i][j] = max({a, b, x});
+        }
+    }
+
+    return dp[0][0];
+}
+
 int32_t main(){
     cin >> a >> b;
 
-    cout << longestCommonSubsequence(0, 0) << endl;
+    cout << longestCommonSubsequence(a, b) << endl;
+
+    cout << LCS_iterative(a, b) << endl;
 }

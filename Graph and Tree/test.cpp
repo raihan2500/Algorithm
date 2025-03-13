@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#ifdef DEBUG
+#ifdef DEBUGd
 #include<algo/debug.h>
 #include<algo/resources.h>
 #else
@@ -14,74 +14,62 @@ using namespace std;
 const int M = 1e9 + 7;
 const int N = 2e5 + 10;
 
-int n;
-vector<vector<int>> graph(N);
-
-
-namespace Lca{
-    int lgMx = 20;
-    int lca[N][25];
-    int levl[N], par[N];
-
-    void dfs(int v = 1, int p = 0){
-        par[v] = p;
-        for(auto child : graph[v]){
-            if(child == p)continue;
-            levl[child] = levl[v] + 1;
-            dfs(child, v);
+class Dsu{
+    int n;
+    vector<int> par, sz;
+    void make(){
+        for(int i = 0; i <= n; i++){
+            par[i] = i;
+            sz[i] = 1;
         }
     }
-
-    void binLift(int v = 1, int p = 0){
-        lca[v][0] = p;
-        for(int i = 1; i <= lgMx; i++){
-            lca[v][i] = lca[lca[v][i - 1]][i - 1];
-        }
-        for(auto child : graph[v]){
-            if(child == p)continue;
-            binLift(child, v);
-        }
+    public:
+    Dsu(int n = 100){
+        this->n = n;
+        par = sz = vector<int> (n + 1);
+        make();
     }
 
-    void init(int v = 1, int p = 0){
-        dfs(v, p); binLift(v, p);
+    int Find(int v){
+        if(par[v] == v)return v;
+        return par[v] = Find(par[v]);
     }
 
-    int get(int a, int b){
-        if(levl[a] < levl[b])swap(a, b);
-        int d = levl[a] - levl[b];
+    void Union(int a, int b){
+        a = Find(a);
+        b = Find(b);
         
-        while(d > 0){
-            int i = log2(d);
-            a = lca[a][i];
-            d -= (1 << i);
+        if(a != b){
+            if(sz[a] < sz[b])swap(a, b);
+            par[b] = a;
+            sz[a] += sz[b];
         }
-        if(a == b)return a;
-        
-        for(int i = lgMx; i >= 0; i--){
-            if(lca[a][i] == 0)continue;
-            if(lca[a][i] == lca[b][i])continue;
-
-            a = lca[a][i];
-            b = lca[b][i];
-        }
-        return lca[a][0];
     }
-}
+};
 
 
 int32_t main(){
-    cin >> n;
-    for(int i = 1; i < n; i++){
-        int x, y;
-        cin >> x >> y;
-        graph[x].push_back(y);
-        graph[y].push_back(x);
+    int n, m;
+    cin >> n >> m;
+    set<pair<int, pair<int, int>>> s;
+    for(int i = 0; i < m; i++){
+        int x, y, wt;
+        cin >> x >> y >> wt;
+        s.insert({wt, {x, y}});
     }
+    Dsu dsu(n);
 
-    Lca::init();
+    int cost = 0;
+    while(!s.empty()){
+        int x = s.begin()->second.first;
+        int y = s.begin()->second.second;
+        int wt = s.begin()->first;
+        s.erase(s.begin());
 
-    int x, y;
-    cin >> x >> y;
-    cout << Lca::get(x, y) << endl;
+        if(dsu.Find(x) == dsu.Find(y))continue;
+        cost += wt;
+        dsu.Union(x, y);
+    }
+    cout << cost << endl;
+  
 }

@@ -1,148 +1,110 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-typedef                    long long ll;
-typedef                    long double ld;
-#define int                long long
-
-#define yes                cout<<"YES\n"
-#define no                 cout<<"NO\n"
-#define nl                 cout<<"\n";
-#define endl               "\n"
-
-#define lin(n)             int n;cin>>n;
-#define vin                vector<int>
-#define pr                 pair<int, int>
-#define pb(n)              push_back(n)
-#define pp                 pop_back()
-#define all(x)             x.begin(),x.end()
-
-#define fi                 first
-#define se                 second
-
-#define forn(i,e)          for(int i=0;i<e;i++)
-#define Forn(i,e)          for(int i=1;i<=e;i++)
-#define rforn(i,s)         for(int i=s-1;i>=0;i--)
-#define print(arr)         for(auto x: arr)cout<<x<<" ";nl;
-#define mprint(mp)         for(auto a : mp)cout<<a.first<<" "<<a.second<<endl;
-
-#define fast_in_out        ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-const long long INF = 1e18;
+#define int long long
 const int M = 1e9 + 7;
-const int N = 1e3 + 100;
+const int N = 1e3 + 10;
 
-vector<string> graph;
-vector<vector<char>>val(N, vector<char> (N));
-vector<vector<pr>> par(N, vector<pr> (N));
-
-bool vis[N][N], flg = 0;
 int n, m;
+int vis[N][N];
+char par[N][N];
+vector<string> grid;
 
-
-vector<pr> movements = {
+vector<pair<int, int>> moves = {
     {1, 0},
-    {-1, 0}, 
+    {-1, 0},
     {0, 1},
     {0, -1}
 };
 
-char indentify(int x, int y){
-    if(x == 0){
-        if(y == 1)return 'R';
-        else return 'L';
-    }
+bool isValid(int x, int y){
+    return x >= 0 and x < n and y >= 0 and y < m;
+}
+
+char Direction(int x, int y){
     if(x == 1)return 'D';
     if(x == -1)return 'U';
+    if(y == 1)return 'R';
+    if(y == -1)return 'L';
     return 'X';
 }
 
-bool isValid(int x, int y){
-    return x >= 0 && x < n && y >=0 && y < m;
+pair<int, int> dirToPoint(char c){
+    if(c == 'D')return {-1, 0};
+    if(c == 'U')return {1, 0};
+    if(c == 'R')return {0, -1};
+    if(c == 'L')return {0, 1};
+    return {0, 0};
 }
 
-void bfs(int x, int y){
-    queue<pr> q;
-    q.push({x, y});
-    vis[x][y] = true;
+bool bfs(int i, int j){
+    queue<pair<int, int>> q;
+    q.push({i, j});
+    vis[i][j] = true;
 
     while(!q.empty()){
-        int vx = q.front().first;
-        int vy = q.front().second;
+        i = q.front().first;
+        j = q.front().second;
         q.pop();
-
-        for(auto movement : movements){
-            int childx = vx + movement.first;
-            int childy = vy + movement.second;
-
-            if(!isValid(childx, childy))continue;
-            if(graph[childx][childy] == '#')continue;
-            if(vis[childx][childy])continue;
-            vis[childx][childy] = true;
-
-            par[childx][childy] = {vx, vy};
-            val[childx][childy] = indentify(movement.first, movement.second);
-            q.push({childx, childy});
-            if(graph[childx][childy] == 'B'){
-                flg = true;
-                return;
-            }
+        for(auto mv : moves){
+            int x = i + mv.first;
+            int y = j + mv.second;
+            if(!isValid(x, y))continue;
+            if(grid[x][y] == '#')continue;
+            if(vis[x][y])continue;
+            vis[x][y] = true;
+            par[x][y] = Direction(mv.first, mv.second);
+            if(grid[x][y] == 'B')return true;
+            q.push({x, y});
         }
-    }
+    }  
+    return false;  
 }
 
-
 int32_t main(){
-    fast_in_out;
     cin >> n >> m;
-    for(int i = 0; i < n; i++){
+    for(int i = 1; i <= n; i++){
         string str;
         cin >> str;
-        graph.push_back(str);
+        grid.push_back(str);
     }
-    int x = -1, y = -1;
 
+    int x, y;
     for(int i = 0; i < n; i++){
-        bool ck = 0;
+        bool flg = false;
         for(int j = 0; j < m; j++){
-            if(graph[i][j] == 'A'){
-                x = i;
-                y = j;
-                ck = 1;
+            if(grid[i][j] == 'A'){
+                x = i, y = j;
+                flg = true;
                 break;
             }
         }
-        if(ck)break;
+        if(flg)break;
     }
-    bfs(x, y);
-    for(int i = 0; i < n; i++){
-        bool ck = 0;
-        for(int j = 0; j < m; j++){
-            if(graph[i][j] == 'B'){
-                x = i;
-                y = j;
-                ck = 1;
-                break;
-            }
-        }
-        if(ck)break;
-    }
-
-    if(!flg){
-        no;
+    if(bfs(x, y) == false){
+        cout << "NO" << endl;
         return 0;
     }
-
-    string ans;
-    ans.push_back(val[x][y]);
-
-    for(;graph[x][y] != 'A';){
-        pr p = par[x][y];
-        x = p.first; y = p.second;
-        ans.push_back(val[x][y]);
+    for(int i = 0; i < n; i++){
+        bool flg = false;
+        for(int j = 0; j < m; j++){
+            if(grid[i][j] == 'B'){
+                x = i, y = j;
+                flg = true;
+                break;
+            }
+        }
+        if(flg)break;
     }
-    ans.pop_back();
-    reverse(all(ans));
-    yes;
-    cout<<ans.size()<<endl;    
-    cout<<ans<<endl;
+    string ans;
+    while(grid[x][y] != 'A'){
+        ans.push_back(par[x][y]);
+        auto pr = dirToPoint(ans.back());
+        x += pr.first;
+        y += pr.second;
+    }
+    cout << "YES" << endl;
+    cout << ans.size() << endl;
+    reverse(ans.begin(), ans.end());
+    cout << ans << endl;
 }
