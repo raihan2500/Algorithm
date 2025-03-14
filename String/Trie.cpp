@@ -19,18 +19,15 @@ struct Trie{
         bool end = false;
         node* next[26] = {nullptr};
     };
-    
-    node* root;
-    Trie(){root = new node();}
+    node* root = new node();
 
     void insert(string str){
         int i = 0;
         node* it = root;
+
         while(i < str.size()){
-            if(it->next[str[i] - 'a'] == nullptr){
-                it->next[str[i] - 'a'] = new node();
-            }
-            it = it->next[str[i] - 'a']; i++;
+            if(it->next[str[i] - 'a'] == nullptr)it->next[str[i] - 'a'] = new node();
+            it = it->next[str[i++] - 'a'];
         }
         it->end = true;
     }
@@ -40,21 +37,18 @@ struct Trie{
         node* it = root;
         while(i < str.size()){
             if(it->next[str[i] - 'a'] == nullptr)return false;
-            it = it->next[str[i] - 'a']; i++;
+            it = it->next[str[i++] - 'a'];
         }
-        return it->end == true;
+        return it->end;
     }
 };
 
 int32_t main(){
     Trie obj;
-    obj.insert("hello");
     obj.insert("raihan");
-    obj.insert("welcome");
-
-    cout << obj.search("hello") << endl;
-    cout << obj.search("hell") << endl;
     cout << obj.search("raihan") << endl;
-    
-    
+    cout << obj.search("raihana") << endl;
+    cout << obj.search("raiha") << endl;
+    cout << obj.search("raiham") << endl;
+  
 }
