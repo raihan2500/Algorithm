@@ -44,7 +44,7 @@ struct ST{
 
     void build(int node, int lo, int hi){
         if(lo == hi){
-            tree[node] = v[node];
+            tree[node] = v[lo];
             return;
         }
         int mid = (lo + hi) / 2;
@@ -81,7 +81,7 @@ struct ST{
 
 
 vector<vector<int>> graph(N);
-int cur_pos, head[N], pos[N];
+int cur_pos = 1, head[N], pos[N];
 int par[N][LG + 1], sz[N], depth[N];
 
 void dfs(int u = 1, int p = 0){
@@ -124,8 +124,32 @@ int lca(int u, int v){
     return par[u][0];
 }
 
+int query_up(int u, int v){
+    int ans = 0;
+    while(head[u] != head[v]){
+        int chain_head = head[u];
+        clog << chain_head <<" " << u << endl;
+        int cur = st.query(1, 1, n, pos[chain_head], pos[u]);
+        ans += cur;
+        u = par[chain_head][0];
+    }
+    ans += st.query(1, 1, n, pos[v], pos[u]);
+    return ans;
+}
+
+int query(int u, int v){
+    if(depth[u] < depth[v])swap(u, v);
+    int l = lca(u, v);
+    int ans = query_up(u, l);
+    if(v != l)ans += query_up(v, l);
+    return ans;
+}
+
 
 int32_t main(){
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
 
     cin >> n;
     int values[n + 1];
@@ -140,7 +164,11 @@ int32_t main(){
     dfs();
     head[1] = 1;
     hld(1);
-    
-    Forn(i,n)cout << i <<" ";nl;
-    Forn(i,n)cout << head[i] <<" ";nl;
+
+    //segment tree's array is filled with Tree's initial values
+    for(int i = 1; i <= n; i++)v[pos[i]] = values[i];
+    Forn(i,n)cout << v[i] <<" ";nl; //Segment tree array elements now
+
+    st.build(1, 1, n);
+    cout << query(7, 1) << endl;
 }
