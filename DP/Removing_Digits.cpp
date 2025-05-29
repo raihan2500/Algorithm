@@ -1,28 +1,33 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define print(arr)         for(auto x: arr)cout<<x<<' '; cout<<endl;
-#define int        long long
+
+#ifdef DEBUG
+#include<algo/debug.h>
+#include<algo/resources.h>
+#else
+#   define clog if (0) cerr
+#   define DB(...)
+#   define db(...) "" 
+#endif
+
+#define int long long
 const int M = 1e9 + 7;
+const int N = 1e6 + 15;
 
-int func(int n){
-    int x = 0;
-    while(n > 0){
-        x = max(x, n %10);
-        n /= 10;
-    }
-    return x;
-}
-
+int n, dp[N];
 
 int32_t main(){
-    int n;
-    cin>>n;
-    int cnt = 0;
-
-    while(n > 0){
-        cnt ++;
-        n -= func(n);
-    }
-    cout<<cnt<<endl;
     
+    cin >> n;
+    memset(dp, ((1 << 5) - 1), sizeof(dp)); dp[n] = 0;
+
+    for(int j = n; j >= 0; j--){
+        int x = j;
+        while(x > 0){
+            dp[j - (x % 10)] = min(dp[j - (x % 10)], 1 + dp[j]);
+            x /= 10;
+        }
+    }
+    
+    cout << dp[0] << endl;
 }

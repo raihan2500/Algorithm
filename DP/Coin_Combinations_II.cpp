@@ -1,29 +1,34 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define print(arr)         for(auto x: arr)cout<<x<<' '; cout<<endl;
-#define int        long long
+
+#ifdef DEBUG
+#include<algo/debug.h>
+#include<algo/resources.h>
+#else
+#   define clog if (0) cerr
+#   define DB(...)
+#   define db(...) "" 
+#endif
+
+#define int long long
 const int M = 1e9 + 7;
 const int N = 1e6 + 10;
-int dp[N];
+
+int n, x, v[101], dp[2][N];
 
 int32_t main(){
-    int n, x;
-    cin>>n>>x;
-    vector<int> v(n);
-    for(int i = 0; i < n; i++){
-        cin>>v[i];
-    }
-    dp[0] = 1;
+    cin >> n >> x;
+    for(int i = 1; i <= n; i++)cin >> v[i];
     
-    for(int i = 0; i < n; i++){
-        for(int j =1; j <= x; j++){
-            if(v[i] > j)continue;
-            dp[j] += dp[j - v[i]];
-            dp[j] %= M;
+    dp[(n + 1) & 1][0] = 1;
+    for(int i = n; i >= 1; i--){
+        for(int j = 0; j <= x; j++){
+            int pos = i & 1;
+            dp[pos][j] = dp[!pos][j];
+            if(j >= v[i])dp[pos][j] += dp[pos][j - v[i]];
+            dp[pos][j] %= M;
         }
     }
-    cout<<dp[x]<<endl;
     
+    cout << dp[1][x] << endl;
 }
-
-//Credit: https://www.youtube.com/watch?v=xhyDRO9DPgA

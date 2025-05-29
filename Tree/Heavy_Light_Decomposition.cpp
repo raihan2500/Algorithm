@@ -13,11 +13,10 @@ using namespace std;
 #define int long long
 const int M = 1e9 + 7;
 const int N = 2e5 + 10;
+
 const int LG = 19;
 
-
 int n, q, v[N];
-
 struct ST{
     #define lc  2 * node
     #define rc  2 * node + 1
@@ -146,6 +145,7 @@ int query(int u, int v){
 }
 
 
+
 int32_t main(){
 
     ios_base::sync_with_stdio(false);
@@ -164,11 +164,9 @@ int32_t main(){
     dfs();
     head[1] = 1;
     hld(1);
-
-    //segment tree's array is filled with Tree's initial values
     for(int i = 1; i <= n; i++)v[pos[i]] = values[i];
-    Forn(i,n)cout << v[i] <<" ";nl; //Segment tree array elements now
-
+    
     st.build(1, 1, n);
-    cout << query(7, 1) << endl;
+    
+    cout << query(2, 1) << endl;
 }

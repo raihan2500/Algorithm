@@ -3,32 +3,19 @@ using namespace std;
 
 #define int long long
 const int M = 1e9 + 7;
-const int N = 2e6 + 10;
+const int N = 1e6 + 1;
 
-int n, x;
-int dp[N];
-vector<int> v;
-
-int recur(int sum){
-    if(sum == x)return 1;
-    if(dp[sum] != -1)return dp[sum];
-    int ans = 0;
-    for(auto i : v){
-        if(sum + i > x)break;
-        ans += recur(sum + i);
-        ans %= M;
-    }
-    return dp[sum] = ans;
-}
+int n, x, v[101], dp[N];
 
 int32_t main(){
-    memset(dp, -1, sizeof(dp));
-    cin >> n >> x;
-    for(int i = 0; i < n; i++){
-        int t; cin >> t;
-        v.push_back(t);
-    }
-    sort(v.begin(), v.end());
 
-    cout << recur(0) << endl;
+    cin >> n >> x;
+    for(int i = 1; i <= n; i++)cin >> v[i];  dp[x] = 1;
+
+    for(int j = x; j >= 0; j--){
+        for(int i = 1; i <= n; i++){
+            if(j + v[i] <= x)dp[j] = (dp[j] + dp[j + v[i]]) % M;
+        }
+    }
+    cout << dp[0] << endl;  
 }

@@ -1,54 +1,102 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int N = 1e5;
+#define int long long
 
+const int N = 2e5 + 10;
+
+int n, q, v[N];
 vector<int> graph[N];
-int subTreeSum[N];
-int evenCount[N];
 
+int ft[2 * N];
+int in[N], out[N], timer = 1;
 
-void dfs(int vertex, int par = 0){
-    subTreeSum[vertex] += vertex;
-    if(vertex % 2 == 0){
-        evenCount[vertex]++;
-    }
-    for(auto child : graph[vertex]){
-        if(child == par)continue;
+void dfs(int u, int p){
+	in[u] = timer++;
+	ft[in[u]] = v[u];
+	for(auto &v : graph[u])if(v != p){
+		dfs(v, u);
+	}
 
-        dfs(child, vertex);
-        subTreeSum[vertex] += subTreeSum[child];
-        evenCount[vertex] += evenCount[child];
-    }
+	out[u] = timer++;
+	ft[out[u]] = v[u];
 }
 
-int main(){
-    int n;
-    cin >> n;
-    
-    for(int i = 0; i < n - 1; i++){
-        int v1, v2;
-        cin >> v1 >> v2;
-        graph[v1].push_back(v2);
-        graph[v2].push_back(v1);
-    }
-    dfs(1);
 
-    for(int i = 1; i <= n; i++){
-        cout<<evenCount[i]<<" "<<subTreeSum[i]<<endl;
-    }
-    return 0;
+#define lc  2 * node
+#define rc  2 * node + 1
 
-    int q;
-    cin >> q;
+int t[8 * N];
+void build(int node, int lo, int hi){
+	if(lo == hi){
+		t[node] = ft[lo];
+		return;
+	}
+
+	int mid = (hi + lo) >> 1;
+	build(lc, lo, mid);
+	build(rc, mid + 1, hi);
+
+	t[node] = t[lc] + t[rc];
+}
+
+int query(int node, int lo, int hi, int l, int r){
+	if(hi < l or lo > r)return 0;
+	if(lo >= l and hi <= r)return t[node];
+
+	int mid = (hi + lo) >> 1;
+	int q1 = query(lc, lo, mid, l, r);
+	int q2 = query(rc, mid + 1, hi, l, r);
+
+	return q1 + q2;
+}
+
+void update(int node, int lo, int hi, int p, int val){
+	if(hi < p or lo > p)return;
+	if(lo == hi){
+		t[node] = ft[p] = val;
+		return;
+	}
+
+	int mid = (hi + lo) >> 1;
+	update(lc, lo, mid, p, val);
+	update(rc, mid + 1, hi, p, val);
+
+	t[node] = t[lc] + t[rc];
+}
 
 
+int32_t main(){
+	
+	ios_base::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
 
-    while(q--){
-        int v;
-        cin >> v;
-        cout<<subTreeSum[v]<<endl;
-        cout<<evenCount[v]<<endl;
 
-    }
+	cin >> n >> q;
+	for(int i = 1; i <= n; i++)cin >> v[i];
+	for(int i = 1; i < n; i++){
+		int x, y;
+		cin >> x >> y;
+		graph[x].push_back(y);
+		graph[y].push_back(x);
+	}
+
+	dfs(1, 0);
+	int m = 2 * n;
+	build(1, 1, m);
+
+	while(q--){
+		int t, x; 
+		cin >> t >> x;
+		if(t == 1){
+			int val;
+			cin >> val;
+			update(1, 1, m, in[x], val);
+			update(1, 1, m, out[x], val);
+
+		}else{
+			int qr = query(1, 1, m, in[x], out[x]);
+			cout << qr / 2 << endl;
+		}
+	}
 }
