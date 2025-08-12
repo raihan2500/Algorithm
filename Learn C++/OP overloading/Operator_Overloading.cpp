@@ -1,45 +1,30 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int long long
 const int M = 1e9 + 7;
 const int N = 2e5 + 10;
 
-class Complex{
-private:
-    int real, imag;
-public:
-    Complex(int r = 0, int i = 0){
-        real = r;
-        imag = i;
+struct com{
+    double real, img;
+    com(double real = 0, double img = 0) : real(real), img(img){}
+    com operator + ( com a) const{
+        return com(real + a.real, img + a.img);
     }
 
-    Complex operator+(Complex const& obj){
-        Complex res;
-        res.real = real + obj.real;
-        res.imag = imag + obj.imag;
-        return res;
+    com operator - (com b)const{
+        return {3, 5};
     }
-
-    void operator ++ (){
-        real++;
-        imag++;
-    }
-
-    void print(){
-        cout << real << " " << imag <<"i" << endl;
+    com operator += (com b){
+        return 
     }
 };
 
 int32_t main(){
-    
-    Complex num(2, 3);
-    Complex b(3, 4);
+    com a(1, 2), b(3, 4);
+    com c = a + b;
 
-    Complex(num + b).print();
-    num.print();
-    num = num + b;
-    ++num;
-    num.print();
+    cout << c.real <<" " << c.img << endl;
+    com d = a - b;
+    cout << d.real <<" " << d.img << endl;
 
 }

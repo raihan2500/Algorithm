@@ -5,54 +5,57 @@ using namespace std;
   Find number of element greater than x in range [l, r];
 */
 
-struct MergeST{
-  #define lc node << 1
-  #define rc node << 1 | 1
 
-  int n;
-  vector<int> v;
-  vector<vector<int>> t;
-  MergeST(vector<int> v) : v(v){
-    n = v.size() - 1;
-    t.resize(4 * n);
-    build(1, 1, n);
+struct MST{
+  using vec = vector<int>;
+  int n; vec v;
+  vector<vec> t;
+
+  MST(vec v) : v(v){
+    n = v.size() - 1; //1-based index
+    t.resize(2 * n + 2);
+    build();
   }
-  inline void merge(vector<int> &ans, vector<int> &a, vector<int> &b){
-    int n = a.size();
-    int m = b.size();
+
+  inline void merge(vec &ans, vec &a, vec &b) {
     int i = 0, j = 0;
-    for(; i < n and j < m;){
-      if(a[i] < b[j])ans.push_back(a[i++]);
+    while(i < a.size() && j < b.size()) {
+      if(a[i] < b[j]) ans.push_back(a[i++]);
       else ans.push_back(b[j++]);
     }
-    while(i < n)ans.push_back(a[i++]);
-    while(j < m)ans.push_back(b[j++]);
+    while(i < a.size()) ans.push_back(a[i++]);
+    while(j < b.size()) ans.push_back(b[j++]);
   }
 
-  int query(int node, int lo, int hi, int l, int r, int x){
-    if(hi < l or lo > r)return 0;
-    if(lo >= l and hi <= r){
-      const auto &vec = t[node];
-      return vec.end() - upper_bound(vec.begin(), vec.end(), x);
-    }
-
-    int mid = (lo + hi) >> 1;
-    int q1 = query(lc, lo, mid, l, r, x);
-    int q2 = query(rc, mid + 1, hi, l, r, x);
-    return q1 + q2;
+  void build(){
+    for(int i = 1; i <= n; i++)t[i + n].push_back(v[i]);
+    for(int i = n; i >= 1; i--){
+      merge(t[i], t[i << 1], t[i << 1 | 1]);
+    } 
   }
 
-  void build(int node, int lo, int hi){
-    if(hi == lo){
-      t[node] = {v[lo]};
-      return;
+  bool flg = false;
+  int count(const vec &v, int x){
+    if(flg){
+      return (int)(v.end() - upper_bound(v.begin(), v.end(), x));
+    }else{
+      return (int)(lower_bound(v.begin(), v.end(), x) - v.begin());
     }
-    int mid = (hi + lo) >> 1;
-    build(lc, lo, mid);
-    build(rc, mid + 1, hi);
-    merge(t[node], t[lc], t[rc]);
+  }
+
+  int query(int l, int r, int x, bool f){
+    flg = f; //flg = 0: strictly less then x ; flg = 1: strictly greater than x;
+    l += n; r += n;
+    int ans = 0;
+    for(; l <= r; l >>= 1, r >>= 1){
+      if(l % 2 == 1)ans += count(t[l++], x);
+      if(r % 2 == 0)ans += count(t[r--], x);
+    }//Try while loop if there is an issue
+    return ans;
   }
 };
+
+
 
 
 
