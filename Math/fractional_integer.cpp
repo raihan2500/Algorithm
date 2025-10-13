@@ -17,43 +17,14 @@ const int N = 2e5 + 10;
 
 struct frac {
   int a = 1, b = 1;
-  void norm(int &x, int &y){
-    int g = gcd(x, y);
-    x /= g; y /= g;
-    if(y < 0){ x = -x; y = -y; }
-  }
+  
+  void norm(int &x, int &y){ int g = gcd(x, y); x /= g; y /= g; if(y < 0){ x = -x; y = -y; } }
+  frac(int a = 1, int b = 1) : a(a), b(b) { norm(this->a, this->b); }
 
-  frac(int a = 1, int b = 1) : a(a), b(b) {
-    norm(this->a, this->b);
-  }
-
-  inline frac & operator *= (const frac &i){
-    a *= i.a; b *= i.b;
-    norm(a, b);
-    return *this;
-  }
-
-  inline frac & operator /= (const frac &i){
-    a *= i.b; b *= i.a;
-    norm(a, b);
-    return *this;
-  }
-
-  inline frac & operator += (const frac &i){
-    int d = lcm(b, i.b);
-    a = a * (d / b) + i.a * (d / i.b);
-    b = d;
-    norm(a, b);
-    return *this;
-  }
-
-  inline frac & operator -= (const frac &i){
-    int d = lcm(b, i.b);
-    a = a * (d / b) - i.a * (d / i.b);
-    b = d;
-    norm(a, b);
-    return *this;
-  }
+  inline frac & operator *= (const frac &i){  a *= i.a; b *= i.b;  norm(a, b);  return *this; }
+  inline frac & operator /= (const frac &i){ a *= i.b; b *= i.a;   norm(a, b);  return *this; }
+  inline frac & operator += (const frac &i){ int d = lcm(b, i.b); a = a * (d / b) + i.a * (d / i.b); b = d;  norm(a, b); return *this; }
+  inline frac & operator -= (const frac &i){ int d = lcm(b, i.b); a = a * (d / b) - i.a * (d / i.b); b = d;  norm(a, b); return *this; }
 
   friend inline frac operator + (frac a, const frac &b){ return a += b; }
   friend inline frac operator - (frac a, const frac &b){ return a -= b; }

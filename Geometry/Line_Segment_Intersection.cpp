@@ -48,7 +48,6 @@ const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
 
-
 const double eps = 1e-9;
 const double PI = acos(-1.0);
 int sign(double x){return (x > eps) - (x < -eps);}
@@ -87,23 +86,39 @@ struct point{
 } p0;
 
 
-
 int orient(point a, point b, point c){
   int cross = (c.y - a.y)*(b.x - a.x) - (b.y - a.y)*(c.x - a.x);
   if(cross == 0)return 0;   //same line
   return cross > 0 ? 1 : -1; // left (+1) : right (-1)
 }
 
+/************* point c lies on ab line or not **************/
+bool on_segment(point a, point b, point c){ 
+  if(orient(a, b, c))return false;
+  return (c.x >= min(a.x, b.x) and c.x <= max(a.x, b.x)) and (c.y >= min(a.y, b.y) and c.y <= max(a.y, b.y));
+}
+
+/************* ab and cd lines are intersecting or not ***************/
+bool line_intersect(point a, point b, point c, point d){
+  int o1 = orient(a, b, c);
+  int o2 = orient(a, b, d);
+  int o3 = orient(c, d, a);
+  int o4 = orient(c, d, b);
+
+  if(o1 != o2 and o3 != o4)return true;
+  else if(!o1 and on_segment(a, b, c))return true;
+  else if(!o2 and on_segment(a, b, d))return true;
+  else if(!o3 and on_segment(c, d, a))return true;
+  else if(!o4 and on_segment(c, d, b))return true;
+  else return false;
+}
 
 void _(){
-  point a, b, c;
-  cin >> a >> b >> c;
-  int q = orient(a, b, c);
-  if(!q)cout << "TOUCH" << endl;
-  else if(q > 0)cout << "LEFT\n";
-  else cout << "RIGHT\n";
-    
-    
+  point a, b, c, d;
+  cin >> a >> b >> c >> d;  
+
+  if(line_intersect(a, b, c, d))yes;
+  else no;  
 }
 
 int32_t main(){

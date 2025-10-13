@@ -48,10 +48,10 @@ const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
 
-
 const double eps = 1e-9;
 const double PI = acos(-1.0);
 int sign(double x){return (x > eps) - (x < -eps);}
+
 struct point{
   double x, y;
   point(){x = 0, y = 0;}
@@ -87,23 +87,76 @@ struct point{
 } p0;
 
 
-
 int orient(point a, point b, point c){
   int cross = (c.y - a.y)*(b.x - a.x) - (b.y - a.y)*(c.x - a.x);
   if(cross == 0)return 0;   //same line
   return cross > 0 ? 1 : -1; // left (+1) : right (-1)
 }
 
+/************* point c lies on ab line or not **************/
+bool on_segment(point a, point b, point c){ 
+  if(orient(a, b, c))return false;
+  return (c.x >= min(a.x, b.x) and c.x <= max(a.x, b.x)) and (c.y >= min(a.y, b.y) and c.y <= max(a.y, b.y));
+}
+
+/************* ab and cd lines are intersecting or not ***************/
+bool line_intersect(point a, point b, point c, point d){
+  int o1 = orient(a, b, c);
+  int o2 = orient(a, b, d);
+  int o3 = orient(c, d, a);
+  int o4 = orient(c, d, b);
+
+  if(o1 != o2 and o3 != o4)return true;
+  else if(!o1 and on_segment(a, b, c))return true;
+  else if(!o2 and on_segment(a, b, d))return true;
+  else if(!o3 and on_segment(c, d, a))return true;
+  else if(!o4 and on_segment(c, d, b))return true;
+  else return false;
+}
+
+/************* area of a polygon of v[0], v[1],...v[n - 1] points *************/
+double polygon_area(vector<point> &v){
+  int n = v.size();
+  double ans = 0;
+  for(int i = 0; i < n; i++){
+    point p1 = v[i];
+    point p2 = v[(i + 1) % n];
+    ans += (p1.x*p2.y) - (p2.x*p1.y); 
+  }
+  return abs(ans / 2.0);
+}
+
+/************ Lattice point on a line excluding endpoints *****************/
+int lattice_points_on_seg(point a, point b){
+  int dx = abs(b.x - a.x);
+  int dy = abs(b.y - a.y);
+  return __gcd(dx, dy) - 1;
+}
+
+
 
 void _(){
-  point a, b, c;
-  cin >> a >> b >> c;
-  int q = orient(a, b, c);
-  if(!q)cout << "TOUCH" << endl;
-  else if(q > 0)cout << "LEFT\n";
-  else cout << "RIGHT\n";
-    
-    
+  int n; 
+  cin >> n;
+  vector<point> v(n + 1);
+  forn(i, n + 1)cin >> v[i];
+
+  int ans = 0;
+  for(int i = 0; i <= n; i++){
+    point a = v[i];
+    point b = v[(i + 1) %(n + 1)];
+    point c = v[(i + 2) % (n + 1)];
+    int dx = b.x - a.x;
+    int dy = b.y - a.y;
+    point d = a;
+    d += point(dx, dy);
+    int q = orient(a, c, d);
+    if(q < 0)ans++;
+  }
+
+  cout << ans << endl;
+  
+  
 }
 
 int32_t main(){
@@ -112,7 +165,7 @@ int32_t main(){
   cin.tie(NULL); cout.tie(NULL);
 
   int test = 1;  
-  cin>>test;
+  // cin>>test;
   for(int i = 1; i <= test; i++){
       // cout << "Case " << i <<": ";
       _();

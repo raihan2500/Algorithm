@@ -48,10 +48,10 @@ const int M = 1e9 + 7;
 const int N = 2e5 + 100;
 
 
-
 const double eps = 1e-9;
 const double PI = acos(-1.0);
 int sign(double x){return (x > eps) - (x < -eps);}
+
 struct point{
   double x, y;
   point(){x = 0, y = 0;}
@@ -87,23 +87,24 @@ struct point{
 } p0;
 
 
-
-int orient(point a, point b, point c){
-  int cross = (c.y - a.y)*(b.x - a.x) - (b.y - a.y)*(c.x - a.x);
-  if(cross == 0)return 0;   //same line
-  return cross > 0 ? 1 : -1; // left (+1) : right (-1)
-}
-
-
 void _(){
-  point a, b, c;
-  cin >> a >> b >> c;
-  int q = orient(a, b, c);
-  if(!q)cout << "TOUCH" << endl;
-  else if(q > 0)cout << "LEFT\n";
-  else cout << "RIGHT\n";
-    
-    
+  lin(n);
+  vector<point> v(n);
+  forn(i,n)cin >> v[i];
+  map<pr, int> mp;
+
+  int ans = 0;
+
+  for(int i = 0; i < n; i++){
+    for(int j = i + 1; j < n; j++){
+      pr p(v[i].x + v[j].x, v[j].y + v[i].y);
+      ans += mp[p];
+      mp[p]++;
+    }
+  }
+  
+  cout << ans << endl;
+  
 }
 
 int32_t main(){
@@ -112,7 +113,7 @@ int32_t main(){
   cin.tie(NULL); cout.tie(NULL);
 
   int test = 1;  
-  cin>>test;
+  // cin>>test;
   for(int i = 1; i <= test; i++){
       // cout << "Case " << i <<": ";
       _();
