@@ -15,38 +15,32 @@ const int M = 1e9 + 7;
 const int N = 2e5 + 10;
 
 string preprocess(string &str){
-    string res = "*";
-    for(auto &i : str){
-        res.push_back('$');
-        res.push_back(i);
-    }
-    res += "$#";
-    return res;
+  string res = "*";
+  for(auto &i : str){
+    res.push_back('$');
+    res.push_back(i);
+  }
+  res += "$#";
+  return res;
 }
 
-
 string LPS(string &inp){
-    
-    string str = preprocess(inp);
-    int n = str.size(), c = 0, r = 0, mx = 0;;
-    vector<int> lps(n, 0);
+  string str = preprocess(inp);
+  int n = str.size(), c = 0, r = 0, mx = 0;;
+  vector<int> lps(n, 0);
 
-    for(int i = 1; i < n - 1; i++){
-        int mirror_i = 2 * c - i;
-
-        if(i < r) lps[i] = min(r - i, lps[mirror_i]);
-
-        while(str[i + lps[i] + 1] == str[i - lps[i] - 1]) lps[i]++;
-
-        if(i + lps[i] > r){
-            c = i;
-            r = i + lps[i];
-        }
-
-        if(lps[i] > lps[mx])mx = i;
+  for(int i = 1; i < n - 1; i++){
+    int mirror_i = 2 * c - i;
+    if(i < r) lps[i] = min(r - i, lps[mirror_i]);
+    while(str[i + lps[i] + 1] == str[i - lps[i] - 1]) lps[i]++;
+    if(i + lps[i] > r){
+        c = i;
+        r = i + lps[i];
     }
+    if(lps[i] > lps[mx])mx = i;
+  }
 
-    return inp.substr((mx - lps[mx]) / 2, lps[mx]);
+  return inp.substr((mx - lps[mx]) / 2, lps[mx]);
 }
 
 int32_t main(){
